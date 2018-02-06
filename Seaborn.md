@@ -46,8 +46,17 @@ sns.barplot(x='value',y='name',order=[ , , ],pallete = 'spring',estimator = medi
 ```
 
 1.order 决定作图横坐标展示顺序  
-![](figures/order.png) 
+
+![](figures/order.png)  
+
 2.estimator 根据何种量度确定直方图数值(如：中位数，平均数)  
-![](figures/estimator.png)
-3.hue 对比模式，若hue对应column中有k种元素，则分k列为一组表示
-![](figures/hue.png)
+
+![](figures/estimator.png)  
+
+3.hue 对比模式，若hue对应column中有k种元素，则分k列为一组表示  
+
+![](figures/hue.png)  
+
+4.color + saturation 调整纯色饱和度  
+
+5.capsize 表示置信区间的I字形横杠的宽度
