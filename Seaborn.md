@@ -23,6 +23,6 @@ Seaborn 所有作图基于pandas.DataFrame,其dtypes对作图机制产生了很�
 ``` df.sort_values('value',ascending = False) ```
 
 再次调用barplot画出如下图像  
-
+![fig]('figures\\barplot1.png')
 
 
