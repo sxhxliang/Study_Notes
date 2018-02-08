@@ -65,8 +65,10 @@ sns.barplot(x='value',y='name',order=[ , , ],pallete = 'spring',estimator = medi
 
 ```python  
 sns.distplot(series,rug = True,hist = False,vertical = True,color = 'green')  
-```   
-rug:是否在底部显示数据分布  
+```  
+![](figures/distplot.png)
+
+rug:是否在底部显示数据分布 
 
 hist:是否显示直方块  
 
@@ -77,7 +79,9 @@ vertical:横向or纵向（default：横向 False）
 
 ```python
 sns.jointplot(x='tip',y='total_bill',data=tips,stat_func = your_func,kind = 'kde'，color='#4CB391') 
-```
+```  
+
+![](figures/joint.png)
 
 1.stat_func 你自定义的函数  
 
