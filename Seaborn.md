@@ -73,4 +73,14 @@ hist:是否显示直方块
 vertical:横向or纵向（default：横向 False）  
 
 
+## jointplot  
 
+```python
+sns.jointplot(x='tip',y='total_bill',data=tips,stat_func = your_func,kind = 'kde'，color='#4CB391') 
+```
+
+1.stat_func 你自定义的函数  
+
+2.kind 主图形式，默认为'scatter'散点图，'kde'为密度图，'hex'为蜂巢图，'reg'添加回归曲线, 'resid'为中心化  
+
+3.color为颜色，rgb配色表参见 https://www.cnblogs.com/darkknightzh/p/6117528.html
