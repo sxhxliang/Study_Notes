@@ -64,7 +64,7 @@ sns.barplot(x='value',y='name',order=[ , , ],pallete = 'spring',estimator = medi
 ## Distplot  
 
 ```python  
-sns.distplot(series,rug = True,hist = False,vertical = True,color = 'green')  
+sns.distplot(data['columns'],rug = True,hist = False,vertical = True,color = 'lavender')  
 ```  
 ![](figures/distplot.png)
 
