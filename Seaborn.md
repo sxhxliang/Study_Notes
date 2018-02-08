@@ -8,7 +8,7 @@ Seaborn 所有作图基于pandas.DataFrame,其dtypes对作图机制产生了很�
 data = sns.load_dataset('dataset_name')
 ```
 
-## 1.Bar Plot  
+## 1.BarPlot  
 
 假如我们通过numpy矩阵生成了一个DataFrame，却并没有指定其dtype  
 
@@ -60,3 +60,17 @@ sns.barplot(x='value',y='name',order=[ , , ],pallete = 'spring',estimator = medi
 4.color + saturation 调整纯色饱和度  
 
 5.capsize 表示置信区间的I字形横杠的宽度
+
+## Distplot  
+
+```python  
+sns.distplot(series,rug = True,hist = False,vertical = True,color = 'green')  
+```   
+rug:是否在底部显示数据分布  
+
+hist:是否显示直方块  
+
+vertical:横向or纵向（default：横向 False）  
+
+
+
