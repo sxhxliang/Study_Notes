@@ -3,7 +3,6 @@
     v1 = np.random.randn(d1,d2,d3,...)  标准正态分布 trick: randn(*a.shape)
     v2 = np.random.random(tuple)        
     v3 = np.random.randint(L, R, tuple) 
-## 基本运算
 ### 求和
     np.sum(A, axis = 1, keepdims=True) 列求和
 - 0-base
@@ -22,7 +21,7 @@
     np.linalg.inv(A)
 ### Functions
     np.exp(A)
-每行最大值组成的列向量
+每行最大值组成的列向量 
 
     np.max(A, axis=1)    
 ### 向量展开
