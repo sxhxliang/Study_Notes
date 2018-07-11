@@ -1,4 +1,6 @@
 ## Tensorboard
+真是一个强大的工具，不仅可以可视化计算图，还可以记录运行时节点数据信息，分布，统计，checkpoints.  
+快速上手可视化graph
 ```python
 with tf.Session() as sess:
     writer = tf.summary.FileWriter(path, sess.graph)
@@ -10,6 +12,18 @@ writer.close()
 tensorboard --logdir = path
 ```
 打开浏览器localhost:6006端口即可
+
+![](figures/tensorboard.png)
+
+## tf.variable_scope
+每一个scope就是一组节点的子图，如上方的word2vec, Gradient, another_scope。而scope之间通过节点的operation链接
+```python
+with tf.variable_scope("another_scope") as scope:
+    ...
+with tf.variable_scope("word2vec") as scope:
+    ...
+```
+Scope的存在使得模型结构更加清晰
 
 ## 分布  
 ### 平均分布
