@@ -1,3 +1,16 @@
+## Tensorboard
+```python
+with tf.Session() as sess:
+    writer = tf.summary.FileWriter(path, sess.graph)
+    ...
+writer.close()
+```
+命令行输入：
+```shell
+tensorboard --logdir = path
+```
+打开浏览器localhost:6006端口即可
+
 ## 分布  
 ### 平均分布
 ```python
