@@ -1,3 +1,12 @@
+## Install
+吐槽一下国内清华源，package版本极度落后，conda update后tensorflow 仍是1.3.0版本，此时最新版已经是1.9.0了。
+捣鼓半天换了conda-forge源后终于成功。
+```shell
+conda config --add channels conda-forge
+conda update --all
+```
+一下更新了200多个包
+
 ## Tensorboard
 真是一个强大的工具，不仅可以可视化计算图，还可以记录运行时节点数据信息，分布，统计，checkpoints.  
 快速上手可视化graph
