@@ -7,6 +7,22 @@ conda update --all
 ```
 一下更新了200多个包
 
+## Graph
+```python
+a = tf.constant(3, dtype=tf.float32)
+b = tf.constant(4.0)
+total = a + b
+with tf.Session() as sess:
+    t = sess.run(total)
+```
+当使用 Session.run 请求输出节点时，TensorFlow会从该节点回溯整个图，并流经提供输出节点对应的输入值的所有节点。因此此指令会打印预期的值7.0
+
+```python
+t = sess.run({'ab':(a, b), 'total':total})
+```
+out: {'ab': (3.0, 4.0), 'total': 7.0}
+
+
 ## Tensorboard
 真是一个强大的工具，不仅可以可视化计算图，还可以记录运行时节点数据信息，分布，统计，checkpoints.  
 快速上手可视化graph
