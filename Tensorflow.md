@@ -1,6 +1,6 @@
 ## Install
-吐槽一下国内清华源，package版本极度落后，conda update后tensorflow 仍是1.3.0版本，此时最新版已经是1.9.0了。
-捣鼓半天换了conda-forge源后终于成功。
+国内清华源不知为何conda update后tensorflow 仍是1.3.0版本，此时最新版已经是1.9.0了。
+折腾半天换了conda-forge源后成功更新到1.8.0。
 ```shell
 conda config --add channels conda-forge
 conda update --all
