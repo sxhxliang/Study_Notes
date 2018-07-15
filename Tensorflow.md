@@ -140,6 +140,10 @@ oranges:  (-0.35609, 0.21854, 0.080944, ..., -0.35413, 0.38511, -0.070976)
 tf.nn.embedding_lookup(params, ids, partition_strategy='mod', name=None, validate_indices=True, max_norm=None)
 ```
 - params: 完整的Embedding Tensor
-- ids: 你需要查看的Embedding vector序号
+- ids: 你需要查看的Embedding vector序号，通常以矩阵形式给出
 - Return: A Tensor with the same type as the tensors in params.  
+将返回的3d-array concate，可使用reshape方法
+```python
+tf.reshape(A, [-1, n_words * dim_embedding])
+```
 
