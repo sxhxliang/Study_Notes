@@ -53,7 +53,8 @@ Scope的存在使得模型结构更加清晰
 ## 数学运算
 ### Tensor之间的运算规则
 - 相同大小 Tensor 之间的任何算术运算都会将运算应用到元素级
-- 不同大小 Tensor(要求dimension 0 必须相同) 之间的运算叫做广播(broadcasting)
+- 不同大小 Tensor(要求dimension 0 必须相同) 之间的运算叫做广播(broadcasting)  
+    - 如[64,5]与[64]、[64,]不可运算，与[64,1]可运算
 - Tensor 与 Scalar(0维 tensor) 间的算术运算会将那个标量值传播到各个元素
 - TensorFLow 在进行数学运算时，一定要求各个 Tensor 数据类型一致
 
