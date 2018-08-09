@@ -7,7 +7,7 @@ Options and arguments (and corresponding environment variables):
        
 -B     : don't write .pyc files on import; also PYTHONDONTWRITEBYTECODE=x  
 
--c cmd : program passed in as string (terminates option list)  
+**-c cmd** : program passed in as string (terminates option list)  
 ```python 
   python -c "print((2 + 3)/5)" 
 ```
@@ -15,16 +15,19 @@ Options and arguments (and corresponding environment variables):
 
 -E     : ignore PYTHON* environment variables (such as PYTHONPATH)  
 
--h     : print this help message and exit (also --help) 
+**-h**     : print this help message and exit (also --help) 
+```python
+python3 -m http.server -h
+```
 
 -i     : inspect interactively after running script; forces a prompt even
          if stdin does not appear to be a terminal; also PYTHONINSPECT=x  
          
 -I     : isolate Python from the user's environment (implies -E and -s)  
 
--m mod : run library module as a script (terminates option list)  
+**-m mod** : run library module as a script (terminates option list)  
 
--O     : remove assert and __debug__-dependent statements; add .opt-1 before
+-O     : remove assert and debug-dependent statements; add .opt-1 before
          .pyc extension; also PYTHONOPTIMIZE=x  
          
 -OO    : do -O changes and also discard docstrings; add .opt-2 before
