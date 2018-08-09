@@ -1,2 +1,2 @@
-# Py_Notebook
-Some useful tools and funny projects %* v *%
+# Py_Note
+Make some notes for future reference.
