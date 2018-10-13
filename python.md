@@ -22,11 +22,13 @@ arg ...: arguments passed to program in sys.argv[1:]
 ```python
 python --help
 ```
+
 ## package 结构
 假设我们有如下package， 每个py 脚本中都仅有 print(__name__) 语句  [其中__init__.py 脚本在import此级目录时会被自动执行]
 ```python
 a
 ├── b
+|   |—— d.py
 │   ├── c.py
 │   └── __init__.py
 └── __init__.py
@@ -44,6 +46,25 @@ __main__
 ```
 
 所以__name__是反映包的结构的内置变量，而当前运行的module会被指定为__main__。
+
+## module 和 package
+在python中，每个文件、文件夹都是一个module，package是一个特殊的module。  
+而package则是一个拥有__init__.py的文件夹。所以
+```python
+import b
+```
+会执行b文件夹下的__init__.py, 然而并不会载入模块c，若要载入模块c需要：import b.c。
+
+### 当前命令路径$(PSD)与import的相对性没有任何关系。
+在b文件夹下运行 python c.py
+```python
+# c.py
+from . import d
+```
+程序报错：没有指定father package，因为我当前module的最高等级就是c。此时应该在a文件夹下执行 
+```
+python -m b.c
+```
 
 ## 指定程序入口
 python的import机制其实是将module copy到当前脚本的头部，所以无论如何脚本的最顶层代码（0缩进）都会被运行。为了区分作为模块导入 or 作为脚本运行，我们使用如下语句：
