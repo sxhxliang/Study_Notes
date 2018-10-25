@@ -89,7 +89,7 @@ if __name__ == "__main__":
 ```python
 >> func([1,2,3], {"a":"1"}, 4, pos=123, length=1234))
 
-def func(**kwargs, *args):
+def func(*args, **kwargs):
    print(len(args))     # 3 
    print(args)          # ([1, 2, 3], {'a': '1'}, 4)
    print(kwargs)        # {'pos': 123, 'length': 1234}
