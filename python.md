@@ -82,24 +82,18 @@ if __name__ == "__main__":
 - positional arguments  
   fooB(a=1,b=2,c=3,d=4)
 
+星号 \*arg 将本位置往后的所有参数合并为一个tuple
+双星号 \*\*kwargs 将所有本位置以后的键值对作为dict传入函数
+**注意：由于\*arg ,\*\*kwargs 向后包含，所以定义函数时应写成def func(\*args, \*\*kwargs)**
+
 ```python
-def one(a,*b):
-    """a is normal args，*b is positional args"""
-    print(b)
-    
-one(1,2,3,4,5,6)
-#-----------------------------
-def two(a=1,**b):
-    """a is normal args，**b is keyword args"""
-    print(b)
-    
-two(a=1,b=2,c=3,d=4,e=5,f=6)
+>> func([1,2,3], {"a":"1"}, 4, pos=123, length=1234))
 
-# 第一个输出为 tuple：
-(2, 3, 4, 5, 6)
-
-# 第二个输出为 dict：
-{'b': 2, 'c': 3, 'e': 5, 'f': 6, 'd': 4}
+def func(**kwargs, *args):
+   print(len(args))     # 3 
+   print(args)          # ([1, 2, 3], {'a': '1'}, 4)
+   print(kwargs)        # {'pos': 123, 'length': 1234}
+   return
 ```
 
 ## Assert 断言
