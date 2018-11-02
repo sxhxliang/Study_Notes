@@ -102,3 +102,22 @@ def func(*args, **kwargs):
 assert len(lists) >=5,'列表元素个数小于5'
 assert 2==1,'2不等于1'
 ```
+
+## 类与继承
+pytorch代码写作过程中遇到，子类的书写规范
+```python
+class LayerNorm(nn.Module):
+    def __init__(self, n_state, e=1e-5):
+        super(LayerNorm, self).__init__() #首先找到 LayerNorm 的父类（就是类 nn.Module），然后把类LayerNorm的对象 self 转换为类 nn.Module 的对象
+        self.g = nn.Parameter(torch.ones(n_state))
+        self.b = nn.Parameter(torch.zeros(n_state))
+        self.e = e
+
+    def forward(self, x):
+        super(LayerNorm, self).somefunction() # 子类对象调用父类方法
+        u = x.mean(-1, keepdim=True)
+        s = (x - u).pow(2).mean(-1, keepdim=True)
+        x = (x - u) / torch.sqrt(s + self.e)
+        return self.g * x + self.b
+```
+
