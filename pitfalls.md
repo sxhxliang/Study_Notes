@@ -22,7 +22,7 @@ tensor([ 0.,  0.,  0.])
 >>> out.sum().backward()  # Requires the original value of out, but that was overwritten by c.zero_()
 RuntimeError: one of the variables needed for gradient computation has been modified by an inplace operation
 ```
-将该Variable从计算图中隔离，若梯度回传经过它则报错，所以更安全
+将该Variable从计算图中隔离，变为一个requires_grad=False 的tensor，若梯度回传经过它则报错，所以更安全
 
 ```python
 >>> a = torch.tensor([1,2,3.], requires_grad = True)
@@ -40,4 +40,23 @@ tensor([ 0.,  0.,  0.])
 ```
 .data不会监督发生的改变，会造成错误的梯度回传
 
+## .cuda() 和.to()
+.cuda() 的源码注释  
 
+    Returns a copy of this object in CUDA memory. 
+    If this object is already in CUDA memory and on the correct device, then no copy is performed and the original object is returned.
+
+.to() 的源码注释
+
+        Here are the ways to call ``to``:
+        
+        .. function:: to(dtype) -> Tensor
+        
+            Returns a Tensor with the specified :attr:`dtype`
+        
+        .. function:: to(device, dtype=None) -> Tensor
+        
+            Returns a Tensor with the specified :attr:`device` and (optional)
+            :attr:`dtype`. If :attr:`dtype` is ``None`` it is inferred to be ``self.dtype``.
+
+综上，.cuda()只是保证gpu里面有一份拷贝的tensor，并不能指定gpu_id; 而.to()则会将其放置在相应的device上。
