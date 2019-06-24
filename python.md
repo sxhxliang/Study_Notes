@@ -145,4 +145,12 @@ if __name__ == '__main__':
     sys.exit(_main())
 ```
 
+更新一下：改成下面的更简洁也OK
+
+```python
+import sys
+from pip import __main__
+if __name__ == '__main__':
+    sys.exit(__main__._main())
+```
 
