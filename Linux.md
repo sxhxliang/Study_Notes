@@ -14,6 +14,7 @@ find . -name "*" -type f -size 0c | xargs -n 1 rm -f
 
 ## TMUX
 ```
+attach一个会话 tmux a -t SESSION-ID
 将当前面板上下分屏：Ctrl + b,"  
 将当前面板左右分屏：Ctrl + b,%  
 选择当前窗口中下一个面板：Ctrl + b,o  
@@ -29,4 +30,14 @@ find . -name "*" -type f -size 0c | xargs -n 1 rm -f
 以 5 个单元格为单位移动边缘以调整当前面板大小：Ctrl + b,Alt+方向键  
 切换默认面板布局：Ctrl + b,空格键  
 最大化当前所在面板：Ctrl + b,z，tmux 1.8 新特性  
+```
+
+## 修改用户密码
+```
+passwd
+```
+
+## 添加环境变量
+```
+export PATH=/home/yunxuan/MAC/anaconda3/bin:$PATH
 ```
