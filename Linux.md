@@ -41,3 +41,14 @@ passwd
 ```
 export PATH=/home/yunxuan/MAC/anaconda3/bin:$PATH
 ```
+
+## 查看cuda与cudnn版本
+```
+cat /usr/local/cuda/version.txt
+cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2
+```
+
+## 添加conda-forge源
+```
+conda config --add channels conda-forge 
+```
