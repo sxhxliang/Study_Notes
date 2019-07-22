@@ -53,6 +53,11 @@
 
 ## 三、Groupby组操作  
 
+### aggregate
+```python
+data.groupby('icgc_donor_id')['chromosome'].agg([func1,func2,func3])
+```
+
 ### 单column操作:  
 
 ```df.groupby('year')['lifeExp']```  
