@@ -6,6 +6,11 @@ screen -r yourname  -> 回到yourname这个session
 ctrl + a + d        -> detach 这个session
 ctrl + option + d       -> 删除这个session
 ``` 
+## 查看文件夹内文件大小
+
+```
+ls -lht
+```
 
 ## 批量删除空文件
 ```
