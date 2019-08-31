@@ -12,6 +12,11 @@ ctrl + option + d       -> 删除这个session
 ls -lht
 ```
 
+## 压缩文件
+```
+tar -zcvf /home/DIR.tar.gz /DIR
+```
+
 ## 批量删除空文件
 ```
 find . -name "*" -type f -size 0c | xargs -n 1 rm -f
