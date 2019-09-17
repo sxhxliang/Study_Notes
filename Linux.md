@@ -46,7 +46,9 @@ scp  -r /tmp/local_dir username@servername:remote_dir
 ```
 
 ## TMUX
+[Cheet Sheet](https://gist.github.com/ryerh/14b7c24dfd623ef8edc7)
 ```
+新建会话 tmux [new -s 会话名 -n 窗口名]
 attach一个会话 tmux a -t SESSION-ID
 开启鼠标滚动 set-window-option -g mouse on
 将当前面板上下分屏：Ctrl + b,"  
