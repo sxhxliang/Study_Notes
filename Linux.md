@@ -17,9 +17,10 @@ ls -lht
 tar -zcvf /home/DIR.tar.gz /DIR
 ```
 
-## 批量删除空文件
+## 批量删除空文件/按正则文法删除某些文件夹
 ```
 find . -name "*" -type f -size 0c | xargs -n 1 rm -f
+ls | grep -P "^A.*[0-9]{2}$" | xargs -d"\n" rm
 ```
 ## SCP
 1. 从服务器下载文件
