@@ -84,8 +84,18 @@ export PATH=/home/yunxuan/MAC/anaconda3/bin:$PATH
 cat /usr/local/cuda/version.txt
 cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2
 ```
+## 查看驱动版本
+```
+cat /proc/driver/nvidia/version
+```
 
 ## 添加conda-forge源
 ```
 conda config --add channels conda-forge 
+```
+
+## 新添加用户无法使用命令行上下键以及tab键
+```
+sudo vi /etc/passwd
+***/bin/sh -> ***/bin/bash
 ```
