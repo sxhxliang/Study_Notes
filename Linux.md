@@ -51,7 +51,7 @@ scp  -r /tmp/local_dir username@servername:remote_dir
 ```
 新建会话 tmux [new -s 会话名 -n 窗口名]
 attach一个会话 tmux a -t SESSION-ID
-开启鼠标滚动 set-window-option -g mouse on
+开启鼠标滚动 set-window-option -g mouse on 或者 setw -g mouse on
 将当前面板上下分屏：Ctrl + b,"  
 将当前面板左右分屏：Ctrl + b,%  
 选择当前窗口中下一个面板：Ctrl + b,o  
