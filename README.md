@@ -8,4 +8,4 @@ Make some notes for future reference.
   - Tensorflow [here](Tensorflow.md)
   - Seaborn [here](Seaborn.md)
 
-配置MAC OS环境教程：jianshu.com/p/405956cdaca6
+配置MAC OS环境教程：[jianshu.com/p/405956cdaca6](jianshu.com/p/405956cdaca6)
