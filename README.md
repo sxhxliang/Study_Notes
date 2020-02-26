@@ -7,3 +7,5 @@ Make some notes for future reference.
   - Pandas [here](pandas.md)
   - Tensorflow [here](Tensorflow.md)
   - Seaborn [here](Seaborn.md)
+
+配置MAC OS环境教程：jianshu.com/p/405956cdaca6
