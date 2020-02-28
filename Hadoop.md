@@ -1,3 +1,12 @@
 # Hadoop
 
 [An Introduction to Apache Hadoop](https://opensource.com/life/14/8/intro-apache-hadoop-big-data)
+
+### What's the ‘Rack’
+A Node is simply a computer. This is typically non-enterprise, commodity hardware for nodes that contain data. Storage of Nodes is called as rack. A rack is a collection of 30 or 40 nodes that are physically stored close together and are all connected to the same network switch. Network bandwidth between any two nodes in rack is greater than bandwidth between two nodes on different racks. A Hadoop Cluster is a collection of racks.
+
+The main purpose of Rack awareness is:
+
+- Increasing the availability of data block
+- Better cluster performance
+- Data protection against rack failure
