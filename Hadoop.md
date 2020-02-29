@@ -41,3 +41,14 @@ Resource Group（资源组），是一个虚拟的组，也是HDFS Quota审计�
 2. 申请加入资源组（HDFS）
 3. 申请加入一个队列（YARN）
 4. 提交任务
+
+## MapReduce
+MapReduce is a software framework for processing large datasets in a distributed fasion over a several machines. The core idea behind MapReduce is mapping your dataset into a collection of <key, value> pairs, and then reducing over all pairs with the same key.
+
+Take **wordcount** as an example:
+
+- The purpose of the map script is to model the data into <key, value> pairs for the reducer to aggregate. (text to <word, 1>)
+- Emitted kv pairs are "shuffled" or grouped based on the keys. (groupby word)
+- The reduce script takes a collection of kv pairs and reduce them. (sum over counts)
+
+![](figures/mapreduce.png)
