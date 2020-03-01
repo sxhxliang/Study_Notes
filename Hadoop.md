@@ -52,3 +52,22 @@ Take **wordcount** as an example:
 - The reduce script takes a collection of kv pairs and reduce them. (sum over counts)
 
 ![](figures/mapreduce.png)
+
+## 过程
+### Map
+- 一个record被一个map输出之后会进行序列化，data 与 metadata分别存储在serialization buffer和accounting buffer中。
+- 任何一个buffer的容量达到阈值后，该buffer中的内容将会被排序并写入磁盘，在写入过程中mapper将同步进行emit。
+- 如果buffer容量已满（写磁盘速度慢于加入buffer速度），则mapper阻塞。
+- mapper运行结束后，所有buffer内容将会被清空，所有磁盘上的segments将会被merge成一个文件。
+
+注意：
+- 增加buffer size可以减少spill的次数，使得mapper运行速度更快。
+- 增加buffer size同样会造成mapper可用内存减少。
+
+| 参数                   | 描述                                             |
+|------------------------|--------------------------------------------------|
+| io.sort.mb             | serialization buffer 和 accounting buffer 总大小 |
+| io.sort.record.percent | serialization size/accounting size               |
+| io.sort.spill.percent  | 触发 buffer spill的阈值                          |
+
+
