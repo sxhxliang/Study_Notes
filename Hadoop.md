@@ -67,7 +67,7 @@ Take **wordcount** as an example:
 | 参数                   | 描述                                             |
 |------------------------|--------------------------------------------------|
 | io.sort.mb             | serialization buffer 和 accounting buffer 总大小 |
-| io.sort.record.percent | serialization size/accounting size               |
+| io.sort.record.percent | serialization size/accounting size，当record较小时可以增加此比例以减少spill次数             |
 | io.sort.spill.percent  | 触发 buffer spill的阈值                          |
 
 
