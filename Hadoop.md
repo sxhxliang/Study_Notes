@@ -53,10 +53,9 @@ Take **wordcount** as an example:
 - Emitted kv pairs are "shuffled" or grouped based on the keys. (groupby word)
 - The reduce script takes a collection of kv pairs and reduce them. (sum over counts)
 
-
+![](figures/mapreduce-data-overview.png)
 
 # 过程详解
-![](figures/mapreduce-data-overview.png)
 ![](figures/mapreduce-overview.png)
 
 ## Mapper 端
@@ -95,22 +94,6 @@ Reducer 通过HTTP端口获取每个 mapper output 对应属于自己的 partiti
 ### Reduce
 合并后的文件作为输入传递给Reducer，Reducer针对每个key及其排序的数据调用reduce函数。产生的reduce输出一般写入到HDFS，reduce输出的文件第一个副本写入到当前运行reduce的机器，其他副本选址原则按照常规的HDFS数据写入原则来进行。
 
-
-
-### Map
-- 一个record被一个map输出之后会进行序列化，data 与 metadata分别存储在serialization buffer和accounting buffer中。
-- 任何一个buffer的容量达到阈值后，该buffer中的内容将会被排序并写入磁盘，在写入过程中mapper将同步进行emit。
-- 如果buffer容量已满（写磁盘速度慢于加入buffer速度），则mapper阻塞。
-- mapper运行结束后，所有buffer内容将会被清空，所有磁盘上的segments将会被merge成一个文件。
-
-注意：
-- 增加buffer size可以减少spill的次数，使得mapper运行速度更快。
-- 增加buffer size同样会造成mapper可用内存减少。
-
-| 参数                   | 描述                                             |
-|------------------------|--------------------------------------------------|
-| io.sort.mb             | serialization buffer 和 accounting buffer 总大小 |
-| io.sort.record.percent | serialization size/accounting size，当record较小时可以增加此比例以减少spill次数             |
-| io.sort.spill.percent  | 触发 buffer spill的阈值                          |
-
+### 实操问题
+[mapper如何判断输入文件](https://blog.csdn.net/levy_cui/article/details/77097532)
 
