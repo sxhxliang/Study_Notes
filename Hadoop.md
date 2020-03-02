@@ -51,9 +51,41 @@ Take **wordcount** as an example:
 - Emitted kv pairs are "shuffled" or grouped based on the keys. (groupby word)
 - The reduce script takes a collection of kv pairs and reduce them. (sum over counts)
 
-![](figures/mapreduce.png)
 
-## 过程
+
+# 过程详解
+![](figures/mapreduce-data-overview.png)
+![](figures/mapreduce-overview.png)
+
+## Mapper 端
+输入数据被切分为多个split送入mapper中，mapper的输出叫做record，每个record进行序列化之后存入一个环形缓冲区中，序列化的record包含data与meta data部分，分别存进kv-buffer和accounting buffer中。
+
+### Buffer in Memory
+这里meta data存储四个数据：buffer中key的位置，value的位置，value的长度，所在partition。这里每个key将会通过一个partitioner分配一个partition(segment) id，每个partition id对应了一个reducer，通常映射为 key % #Reducer，这就保证了相同的key会被分到同一个reducer中。
+
+环形数据结构如下所示，kv-buffer与accounting-buffer 反向增加，二者任何一个达到容量比例时便启动写入disk进程。
+
+![](figures/ring-buffer-detail.png)
+
+### Partition，Sort，and Spill to Disk
+首先需要在内存上进行排序，原则是1st key 为 partition id， 2nd key 是 key。排序后写入磁盘，数据存成spill001.data，索引存成spill001.index。
+与此同时，写入磁盘并不影响mapper继续输出records，这里将巧妙地重置环形buffer的起点，按照比例分配index和data的空间，继续反向加入数据，实现了同步emit与spill。如果存在spill未结束而buffer空间耗尽的情况，则阻塞mapper。
+
+![](figures/spill-file.png)
+
+### Merge on Disk
+当一个mapper所有的records都被写入磁盘后，将会被merge成一个大的分区有序文件，以便于reducer通过HTTP请求对应partition数据时的快速读取。
+
+## Reducer 端
+### Copy
+Reducer 通过HTTP端口获取每个 mapper output 对应属于自己的 partition 的数据。注意每个map任务的完成时间可能是不一样的，reduce任务在map任务结束之后会尽快取走输出结果，这个阶段叫copy。一旦map任务完成之后，就会通过常规心跳通知应用程序的Application Master。reduce的一个线程会周期性地向master询问，直到提取完所有数据。
+### Merge
+当所有map输出都拷贝完毕之后，所有数据被最后合并成一个排序的文件，作为reduce任务的输入。这个合并过程是一轮一轮进行的，最后一轮的合并结果直接推送给reduce作为输入，节省了磁盘操作的一个来回。
+### Reduce
+合并后的文件作为输入传递给Reducer，Reducer针对每个key及其排序的数据调用reduce函数。产生的reduce输出一般写入到HDFS，reduce输出的文件第一个副本写入到当前运行reduce的机器，其他副本选址原则按照常规的HDFS数据写入原则来进行。
+
+
+
 ### Map
 - 一个record被一个map输出之后会进行序列化，data 与 metadata分别存储在serialization buffer和accounting buffer中。
 - 任何一个buffer的容量达到阈值后，该buffer中的内容将会被排序并写入磁盘，在写入过程中mapper将同步进行emit。
