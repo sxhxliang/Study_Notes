@@ -101,3 +101,4 @@ Reducer 通过HTTP端口获取每个 mapper output 对应属于自己的 partiti
 ### 实操问题
 [mapper如何判断输入文件](https://blog.csdn.net/levy_cui/article/details/77097532)
 
+[如何确定mapper数量](https://blog.csdn.net/lylcore/article/details/9136555)
