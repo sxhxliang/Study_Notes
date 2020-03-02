@@ -1,3 +1,15 @@
+## 管道
+通过管道操作，可以指定一个程序的输出为另一个程序的输入，即将一个程序的标准输出与另一个程序的标准输入相连，这种机制就称为管道。
+
+通常，管道操作的预防格式如下：
+
+程序1 | 程序2 | 程序3…… | 程序n
+
+
+```bash
+cat input.txt | python test1.py | python test2.py 
+```
+
 ## screen
 ```
 screen -S yourname  -> 新建一个叫yourname的session
