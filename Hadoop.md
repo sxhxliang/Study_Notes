@@ -61,14 +61,23 @@ Take **wordcount** as an example:
 输入数据被切分为多个split送入mapper中，mapper的输出叫做record，每个record进行序列化之后存入一个环形缓冲区中，序列化的record包含data与meta data部分，分别存进kv-buffer和accounting buffer中。
 
 ### Buffer in Memory
-这里meta data存储四个数据：buffer中key的位置，value的位置，value的长度，所在partition。这里每个key将会通过一个partitioner分配一个partition(segment) id，每个partition id对应了一个reducer，通常映射为 key % #Reducer，这就保证了相同的key会被分到同一个reducer中。
+- Metadata：
+  - buffer中key的位置
+  - value的位置
+  - value的长度
+  - partition id
+- Partition(segment):
+  - 每个key都会通过一个partitioner分配一个partition id
+  - 每个partition id 对应了一个 reducer
+  - partition id = key % #Reducers，这就保证了相同的key会被分到同一个reducer中。
 
-环形数据结构如下所示，kv-buffer与accounting-buffer 反向增加，二者任何一个达到容量比例时便启动写入disk进程。
+环形数据结构如下所示，kv-buffer与accounting-buffer 反向增加，二者任何一个达到容量比例(如80\%)时便启动写入disk进程。
 
 ![](figures/ring-buffer-detail.png)
 
 ### Partition，Sort，and Spill to Disk
 首先需要在内存上进行排序，原则是1st key 为 partition id， 2nd key 是 key。排序后写入磁盘，数据存成spill001.data，索引存成spill001.index。
+
 与此同时，写入磁盘并不影响mapper继续输出records，这里将巧妙地重置环形buffer的起点，按照比例分配index和data的空间，继续反向加入数据，实现了同步emit与spill。如果存在spill未结束而buffer空间耗尽的情况，则阻塞mapper。
 
 ![](figures/spill-file.png)
