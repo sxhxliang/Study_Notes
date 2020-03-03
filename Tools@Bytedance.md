@@ -25,28 +25,28 @@ Interface Definition Languages are designed to allow programmers to define inter
 
 ```
 /opt/tiger/yarn_deploy/hadoop/bin/hadoop jar /opt/tiger/yarn_deploy/hadoop/./share/hadoop/tools/lib/hadoop-streaming-2.6.0-cdh5.4.4.jar     \
--D mapred.job.name=${JOB_NAME} \ # 任务名
+-D mapred.job.name=${JOB_NAME} \            # 任务名
 -D mapred.reduce.memory.limit=3000 \
 -D mapred.map.memory.limit=3000 \
--D stream.memory.limit=3000 \# 任务内存限制
+-D stream.memory.limit=3000 \               # 任务内存限制
 -D mapred.map.capacity.per.tasktracker=1 \
 -D mapred.reduce.capacity.per.tasktracker=1 \
--D mapred.map.tasks=${MAP_TASKS} \ # map个数
--D mapred.job.map.capacity=${MAP_CAPACITY} \ # map容量，一般与map个数一致
--D mapred.reduce.tasks=${RED_TASKS} \ # reduce个数
+-D mapred.map.tasks=${MAP_TASKS} \              # map个数，数目大于等于输入文件数
+-D mapred.job.map.capacity=${MAP_CAPACITY} \    # map容量，一般与map个数一致
+-D mapred.reduce.tasks=${RED_TASKS} \           # reduce个数
 -D mapred.job.reduce.capacity=${RED_CAPACITY} \ # reduce容量，一般与reduce容量一致
--D mapred.job.priority=${MAPRED_PRIORITY} \ # 任务优先级
+-D mapred.job.priority=${MAPRED_PRIORITY} \     # 任务优先级
 -D mapred.userlog.retain.hours=${LOG_RETAIN_HOURS} \
--D stream.num.map.output.key.fields=3 \ # map的结果按前三列排序
--D num.key.fields.for.partition=1 \ # 第一列相同的数据分配到同一个reducer
+-D stream.num.map.output.key.fields=3 \         # map的结果按前三列排序
+-D num.key.fields.for.partition=1 \             # 第一列相同的数据分配到同一个reducer
 -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner \
 -input /log/1079/cpro_pblog_noah/20110814/*/pb.log* \ # 输入
 -input /log/1079/cpro_pblog_noah/20110815/*/pb.log* \ # 输入
 -input /log/3148/shifen_bdclk_noah/20110814/*/dcharge.bd.*.log* \ # 输入
 -input /log/3148/shifen_bdclk_noah/20110815/*/dcharge.bd.*.log* \ # 输入
 -output ${REDUCE_OUT} \ # 输出
--mapper "java6/bin/java -classpath ad_trade com.baidu.cm.ufs.Mapper testno.txt" \ # mapper程序
--reducer "java6/bin/java -classpath ad_trade com.baidu.cm.ufs.Reducer" \ # reducer程序
+-mapper "java6/bin/java -classpath ad_trade com.baidu.cm.ufs.Mapper testno.txt" \   # mapper程序
+-reducer "java6/bin/java -classpath ad_trade com.baidu.cm.ufs.Reducer" \            # reducer程序
 -file ad_trade \ # 要上传分发的文件
 -file testno.txt \
 -cacheArchive /app/ecom/cm/nova.ufs/u-wangyou/java6.tar.gz#java6 # hdfs上要分发的压缩包，解压后的文件夹名为java6
