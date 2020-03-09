@@ -7,7 +7,8 @@ In short, the microservice architectural style is an approach to developing a si
 ### Consul 服务发现
 Consul是由HashiCorp基于Go语言开发的支持多数据中心分布式高可用的服务发布和注册服务软件，采用Raft算法保证服务的一致性，且支持健康检查。
 
-Consul采用主从模式的设计，使得集群的数量可以大规模扩展，集群间通过RPC的方式调用(HTTP和DNS)。
+Consul采用主从模式的设计，使得集群的数量可以大规模扩展，集群间通过RPC的方式调用(HTTP和DNS)。在本地（尤其是使用 mac 机器）调用远程服务时发生，原因是调用远程服务时需要使用 consul 进行服务发现，但是本地机器没有 consul 服务。解决：在环境变量中添加 CONSUL_HTTP_HOST=YOUR_DEVBOX_IP
+
 [Consul 服务发现详解](https://www.jianshu.com/p/f8746b81d65d)
 
 ### Thrift
