@@ -4,6 +4,11 @@
 微服务框架风格是一种通过一组小的服务开发新的应用的方式，这些微服务在其自己的进程中运行并通过轻量级方式如HTTP进行通讯。
 
 In short, the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API. These services are built around business capabilities and independently deployable by fully automated deployment machinery. There is a bare minimum of centralized management of these services, which may be written in different programming languages and use different data storage technologies.
+### Consul 服务发现
+Consul是由HashiCorp基于Go语言开发的支持多数据中心分布式高可用的服务发布和注册服务软件，采用Raft算法保证服务的一致性，且支持健康检查。
+
+Consul采用主从模式的设计，使得集群的数量可以大规模扩展，集群间通过RPC的方式调用(HTTP和DNS)。
+[Consul 服务发现详解](https://www.jianshu.com/p/f8746b81d65d)
 
 ### Thrift
 
