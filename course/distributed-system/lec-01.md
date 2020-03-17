@@ -1,8 +1,11 @@
 # Distributed System
 
 ## Major Topics
+- Performance
+- Scalability
+  - handle a growing amount of work by adding resources to the system.
 - Fault Tolerance
-  - Availability：即便某些节点fails，仍然可以继续provide services
+  - Availability：即便某些节点fails，仍然可以继续 provide services
   - Recoverability：如果许多节点fails导致整个系统停止服务，仍然可以修复并保持正确性
 - Consistency
   - Put/Get Operation
