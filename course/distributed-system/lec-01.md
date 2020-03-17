@@ -13,4 +13,9 @@
 
 ## MapReduce
 ### 目的
-Google 在刚成立之初需要处理巨量数据，如给整个Web的网页进行indexing，那时互联网的整体数据量也有tens of Tyrabytes。当时的处理方式是雇佣大量有经验的SDE，人工设计在集群上的计算任务设计、分配、收集等等。然而这需要大量人力成本，如何能够使得不懂分布式原理的ordinary people也能使用集群进行计算呢？这就是MapReduce这一分布式计算框架诞生的需求。
+Google 在刚成立之初需要处理巨量数据，如给整个Web的网页进行indexing，那时互联网的整体数据量也有tens of Tyrabytes。当时的处理方式是雇佣大量有经验的SDE，人工设计在集群上的计算任务分配、收集、错误处理等等。然而这需要大量人力成本，如何能够使得不懂分布式原理的ordinary people也能使用集群进行计算呢？这就是MapReduce这一分布式计算框架诞生的需求。
+
+### 读取数据
+- MR运行在谷歌的GFS上
+- 首先将输入数据进行分割，并不是随机进行分割，每个map任务将会 "smartly applied" 到每个split所存储的server上，所以几乎所有读取input split和写入map results操作都将会是local read/write，不需要进行网络传输。
+- 然而由于Internet File System的进步，数据传输速度大大加速，现代MapReduce并不会local read/write了，而是分布式读取数据了。
