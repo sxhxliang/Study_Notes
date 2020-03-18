@@ -12,3 +12,13 @@
 4. Co-designing the applications and the ﬁle system API beneﬁts the overall system by increasing our ﬂexibility.
   - 如某些业务使用relaxed consistency model，某些业务使用支持可并发写入版本的GFS
 
+## A Paradox Loop
+Performance -> Shading -> Fault -> Tolerance -> Replication -> Consistency -> Low Performace. 
+
+## Requirements
+1. Big & Fast
+2. Global Access
+3. Sharding
+4. Automatic Recovering
+
+
