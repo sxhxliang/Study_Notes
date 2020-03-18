@@ -57,13 +57,15 @@ Master 在disk上维护了两个文件：
 2. 将其指定为primary，赋予其 lease
 3. 增加version number，告知primary 和 secondaries 最新的 version number
 
-若该文件replicas有primary
+若该文件replicas已有primary
+
 4. client向primary传输数据并在offset处写入数据
 5. Primary replicas通知所有Secondary写入数据
 6. Secondaries 写入数据，返回yes或no
 7. 如果所有replicas返回‘yes’，primary向client返回‘success’，否则返回‘fail’
 
-
+问题：如果某些replicas写入了数据而有些没写，会造成数据不同步的问题，如何解决？
+答：可能因为各种原因导致某些回复no的replicas无法写入，那么这些将会被master弃用，并起用全新的secondary server with up-to-date data。
 
 # Terms
 - **volatile**: volatile is used to describe memory content that is lost when the power is interrupted or switched off. 
