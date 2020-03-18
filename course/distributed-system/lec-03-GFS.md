@@ -50,6 +50,21 @@ Master 在disk上维护了两个文件：
 3. Client 向对应的 chunk server 获取数据
 
 ### 写入数据
+![](https://thetechangle.github.io/images/GFS_flow.png)
+
+若该文件replicas无primary
+1. 询问master拥有最近的version的chunk server
+2. 将其指定为primary，赋予其 lease
+3. 增加version number，告知primary 和 secondaries 最新的 version number
+
+若该文件replicas有primary
+4. client向primary传输数据并在offset处写入数据
+5. Primary replicas通知所有Secondary写入数据
+6. Secondaries 写入数据，返回yes或no
+7. 如果所有replicas返回‘yes’，primary向client返回‘success’，否则返回‘fail’
+
+
 
 # Terms
 - **volatile**: volatile is used to describe memory content that is lost when the power is interrupted or switched off. 
+- **Stale Version**: An old version of data. like a month ago or so.
