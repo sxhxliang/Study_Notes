@@ -31,15 +31,21 @@ Cn-1                ...
 Cn                  Chunk Server K
 ```
 
-Master Data:
+### 2.6 Master MetaData:
 ```
-Map[File name]-> chunk handels (nv)
-Map[chunk handel] -> {list of chunkservers contains replicants, (v: master 重启后询问所有chunk server 确认状态)
-                      chunk version number, (nv)
-                      primary server, # one among the list (v：重启后可以等待60s lease time 后重新分配primary)
-                      lease expiration  # one server can be primary for a certain time (v)
-                      }
+1. The file and chunk namespace
+2. Map[File name]-> chunk handels (nv)
+3. Locations of all chunkservers
+3. Map[chunk handel] -> {list of chunkservers contains replicants, (v: master 重启后询问所有chunk server 确认状态)
+                          chunk version number, (nv)
+                          primary server, # one among the list (v：重启后可以等待60s lease time 后重新分配primary)
+                          lease expiration  # one server can be primary for a certain time (v)
+                        }
 ```
+
+### 2.6.1 In-Memory data structure
+master 节点中的所有数据都是存在内存里
+
 Master 在disk上维护了两个文件：
 1. 一个Log文件，每次在尾部append曾进行的操作，如更改了primary，某个新的chunk存储在哪个server等。
 2. 一个checkpoint，存储整个磁盘的状态，重启后在以最新的checkpoint作为初始化，进行log里此时间点后的操作进行恢复。
