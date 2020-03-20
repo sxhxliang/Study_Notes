@@ -44,11 +44,25 @@ Cn                  Chunk Server K
 ```
 
 ### 2.6.1 In-Memory data structure
-master 节点中的所有数据都是存在内存里
+master 节点中的所有数据都是存在内存里，所以操作速度很快，然而缺点是整个系统的capacity就被master节点的内存容量限制了。
 
-Master 在disk上维护了两个文件：
-1. 一个Log文件，每次在尾部append曾进行的操作，如更改了primary，某个新的chunk存储在哪个server等。
-2. 一个checkpoint，存储整个磁盘的状态，重启后在以最新的checkpoint作为初始化，进行log里此时间点后的操作进行恢复。
+GFS对此的解释是：对一个64MB的chunk，其metadata只需要64byte；GFS也对文件名进行了前缀压缩，使得文件命名空间metadata也只需要64byte，所以metadata所需空间并不大，单纯地增加内存容量即可。
+
+### 2.6.2 Chunk Location
+Master节点不去同步维护每个chunk的位置，而是：
+1. Master Boot之后自动拉取所有在线的chunkserver的状态
+2. 运行时间歇式地通过HeartBeat监控chunkserver
+
+### 2.6.3 Log & Checkpoints
+Master 的故障恢复主要靠两个文件：
+1. Operation Log
+- 在本地存储并在远端备份
+- 每次会flush a batch of log records，只有当本地和远端flush到磁盘之后，master才会相应client的请求。
+
+2. checkpoint
+- 存储整个file system state。
+- 以B-Tree方式存储，可直接映射到内存中，恢复速度快可用性强。
+- 重启后以最新的checkpoint作为初始化，replay recent operation logs。
 
 ### 读取数据
 1. Client 发送文件名与 offset 给 master
@@ -59,19 +73,41 @@ Master 在disk上维护了两个文件：
 ![](https://thetechangle.github.io/images/GFS_flow.png)
 
 若该文件replicas无primary
-1. 询问master拥有最近的version的chunk server
-2. 将其指定为primary，赋予其 lease
-3. 增加version number，告知primary 和 secondaries 最新的 version number
+1. 询问master拥有最新数据的chunk servers
+2. 将其指定为primary，赋予其租约（lease）
 
 若该文件replicas已有primary
 
+3. 增加version number，告知primary 和 secondaries 最新的 version number
 4. client向primary传输数据并在offset处写入数据
 5. Primary replicas通知所有Secondary写入数据
-6. Secondaries 写入数据，返回yes或no
-7. 如果所有replicas返回‘yes’，primary向client返回‘success’，否则返回‘fail’
+6. Secondaries 写入数据，返回'成功'或'失败'
+7. 如果所有replicas均成功，则primary向client报告'成功'，否则返回'失败'
 
 问题：如果某些replicas写入了数据而有些没写，会造成数据不同步的问题，如何解决？
-答：可能因为各种原因导致某些回复no的replicas无法写入，那么这些将会被master弃用，并起用全新的secondary server with up-to-date data。
+
+答：可能因为各种原因导致某些replicas写入失败，那么这些将会被master弃用，并起用全新的secondary server with up-to-date data。
+
+### 并发追加写入
+传统的随机并发写入是不可序列化的，会导致文件中包含来自各个client的碎片化数据。而追加写入是可以序列化的，GFS使用了 **multi-producer/one-comsumer** 的模型去处理并发的追加写入。
+
+**过程：**
+1. Client 将数据推送至所有 chunkservers，向 Primary 发出写入请求
+2. Primary 确认写
+    - 若当前chunk剩余空间不足，则用padding补全，通知secondary进行相同操作，通知Client重试。
+    - 若当前chunk剩余空间充足，直接追加写入，secondary相同操作
+3. 若某chunkserver写入失败，则通知client重写
+
+**要点：**
+1. 追加写入操作是原子的（atomically）
+2. GFS只保证每个chunkserver都有至少一次原子写入，所以某些server上会有重复的records
+3. 如果不需要重复，则可以通过每个records的附加信息过滤掉duplicates
+
+```
+ori:    A   A   A
+append: AB  AX  AB
+retry:  ABB AXB ABB
+```
 
 # Terms
 - **volatile**: volatile is used to describe memory content that is lost when the power is interrupted or switched off. 
