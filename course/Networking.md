@@ -59,9 +59,38 @@
 
 解决办法：要想解决以上两大障碍，借助一台具有公网 IP 的服务器进行桥接即可。
 
+## TCP/IP 四层参考模型
+![](../figures/TCPIP.png)
+
+TCP/IP参考模型是一个抽象的分层模型，这个模型一共分为四层，所有的TCP/IP系列网络协议都被归类到4个抽象的“层”中。每一抽象层创建在低一层提供的服务上，并且为高一层提供服务。 完成一些特定的任务需要众多的协议协同工作，这些协议分布在参考模型的不同层中的，因此有时称它们为一个协议栈。
+
+## OSI 七层参考模型
+![](../figures/OSI.png)
+- 比较重要的HTTP、FTP、SSH在应用层
+- RPC、SOCKS在会话层；
+- TCP、UDP在传输层。
 
 ## TCP/IP 协议族
+TCP/IP 是基于 TCP 和 IP 这两个最初的协议之上的不同的通信协议的大集合，而不是某一个特定的协议。
 
+- TCP - 传输控制协议
+    - TCP 用于从应用程序到网络的数据传输控制。
+    - TCP 负责在数据传送之前将它们分割为 IP 包，然后在它们到达的时候将它们重组。
+- IP - 网际协议（Internet Protocol）
+    - IP 负责计算机之间的通信。
+    - IP 负责在因特网上发送和接收数据包。
+
+- HTTP - 超文本传输协议(Hyper Text Transfer Protocol)
+    - HTTP 负责 web 服务器与 web 浏览器之间的通信。
+    - HTTP 用于从 web 客户端（浏览器）向 web 服务器发送请求，并从 web 服务器向 web 客户端返回内容（网页）。
+
+- HTTPS - 安全的 HTTP（HTTP Secure）
+    - HTTPS 负责在 web 服务器和 web 浏览器之间的安全通信。
+    - 作为有代表性的应用，HTTPS 会用于处理信用卡交易和其他的敏感数据。
+- IMAP - 因特网消息访问协议（Internet Message Access Protocol）
+    - IMAP 用于存储和取回电子邮件。
+- POP - 邮局协议（Post Office Protocol）
+    - POP 用于从电子邮件服务器向个人电脑下载电子邮件。
 
 ## 参考资料
 1. [详解公网Ip和私网ip、ABC类IP地址](https://blog.csdn.net/gui951753/article/details/79210535)
