@@ -1,10 +1,8 @@
 # Networking
 
-![](https://www.google.com.hk/url?sa=i&url=https%3A%2F%2Fwww.ntchosting.com%2Fencyclopedia%2Fdns%2Fip-address%2F&psig=AOvVaw1JkSkOtJMZkkg1MB0DfM_t&ust=1585046717008000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKiZ2qe1sOgCFQAAAAAdAAAAABAJ)
-
-
-
 "IP地址" 就是：Internet Protocol Address。翻译成中文就是：互联网协议地址 或者 网际协议地址。
+
+![](https://sniffer-site.oss-cn-shenzhen.aliyuncs.com/ipclasses.png)
 
 1. 公有地址
 - 公有地址（Public address）由Inter NIC（Internet Network Information Center因特网信息中心）负责。
@@ -18,8 +16,9 @@
 - 这就是为什么我们在使用 ifconfig 时候看到的本机地址都是 192.168.xxx.xxx（在家） 和 172.16.xxx.xxx（在学校/公司）了。
 
 3. 子网掩码（Subnet Mask）
-- 子网掩码用于区别某个IP地址中哪部分为网络部分，哪部分为主机部分。子网掩码由1和0组成，长32位，从前向后连续全为1的位代表网络部分。
-- **并非所有网络都需要子网，这意味着网络可使用默认子网掩码。这相当于说IP地址不包含子网地址。下表列出了A类、B类和C类网络的默认子网掩码。 **
+- 子网掩码用于区别某个IP地址中哪部分为网络部分，哪部分为主机部分。
+- 并非所有网络都需要子网，这意味着网络可使用默认子网掩码。
+- 网络地址 = 子网掩码 & IP地址
 
 |  类型   | 公有地址范围  | 私有地址 | 默认子网掩码 | 分配对象 |
 |  ----  | ----  | ---- | ---- | ---- |
@@ -29,5 +28,42 @@
 
 实际上我们个人电脑的地址为 **IP地址 = 网络地址+子网地址+主机地址**
 
-# TCP/IP 协议族
+# Case Study
+![](https://img-blog.csdn.net/20180201101336584?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZ3VpOTUxNzUz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
+假设电信公司给我们这栋楼分配的公网IP为117.158.134.217，为了使一整栋楼的人都能访问互联网，我们会对重新划分局域网。已知B类私有地址范围是：172.16.0.0~172.31.255.255，我们学校采取的就是这种划分方法，所以我的私网ip地址就是172.18.251.129.
+
+那么公网地址是怎样分配给私有地址的呢？117开头的A类地址，又为什么可以使用B类的子网划分方式呢？这里就引出了NAT（Network Address Translation）网络地址转换技术。
+
+## NAT
+网络的私有地址本身是可路由的，只是公网上的路由器不会转发这三块私有地址的流量；当一个公司内部配置了这些私有地址后，内部的计算机在和外网通信时，公司的边界路由会通过NAT或者PAT技术，将内部的私有地址转换成外网IP，外部看到的源地址是公司边界路由转换过的公网IP地址。
+
+1. 静态 NAT(Static NAT)（一对一）。
+  - 将内部网络的私有IP地址转换为公有IP地址，IP地址对是一对一的，是一直不变的。
+![](https://img-blog.csdn.net/20170913142720836)
+2. 动态地址 NAT(Pooled NAT)（多对多）。
+  - 所有被授权访问Internet的私有IP地址可随机转换为任何指定合法的IP地址。
+![](https://img-blog.csdn.net/20170913142757616)
+3. 网络地址端口转换NAPT（Network Address Port Translation）（Port-Level NAT）（多对一）。
+  - 改变外出数据包的源端口并进行端口转换，采用端口多路复用方式。
+  - 内部网络的所有主机均可共享一个合法外部IP地址实现对Internet的访问，可以最大限度地节约IP地址资源，同时也是IPv4能够维持到今天的最重要的原因之一。
+![](https://img-blog.csdn.net/20170913142845036)
+
+可以看出使用只要私有地址存在于*NAT转换映射表*上就可以分配公网IP，A类地址采用B类子网划分也是可以的。
+
+## NAT穿透
+在互联网信息时代的今天，虽然现在宽带速度都很快，但对于电脑玩家来说，很大的问题是“没有公网 IP”！这使得想要在外访问家里的电脑、NAS、树莓派、摄像头等网络设备或远程控制等，都无法轻松实现。当目标计算机处于局域网内时，外网与该计算机需要连接通信，有时就会出现不支持内网穿透的障碍。
+
+- 障碍一：位于局域网内的主机有两套 IP 地址，一套是局域网内的 IP 地址，通常是动态分配的，仅供局域网内的主机间通信使用；一套是经过网关转换后的外网 IP 地址，用于与外网程序进行通信。
+- 障碍二：位于不同局域网内的两台主机，即使是知道了对方的 IP 地址和端口号，“一厢情愿”地将数据包发送过去，对方也是接收不到的。
+
+解决办法：要想解决以上两大障碍，借助一台具有公网 IP 的服务器进行桥接即可。
+
+
+## TCP/IP 协议族
+
+
+## 参考资料
+1. [详解公网Ip和私网ip、ABC类IP地址](https://blog.csdn.net/gui951753/article/details/79210535)
+2. [详解NAT网络地址转换](https://blog.csdn.net/freeking101/article/details/77962312)
+3. [为什么需要内网穿透以及内网穿透的定义和应用](http://www.weather.com.cn/sstnews/2019/12/3270925.shtml)
