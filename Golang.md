@@ -22,13 +22,19 @@ switch os := runtime.GOOS; os {
 ```
 ### 循环
 ```go
+// C-Style 循环
 for i:=0; i<10; i++ {
   func()
 }
 
-// 省略初始化条件与后处理，相当于while
+// 相当于 while 循环
 for i < 100 {
   func()
+}
+
+// Range-Style 循环
+for i, x := range lst {
+    dosomething()
 }
 ```
 
@@ -58,5 +64,51 @@ slice := []int{2, 3, 5, 7, 11, 13} // 先新建一个数组，再建立一个引
 fmt.Println(len(s), cap(s))
 ```
 
+### Channel 通道
+Channel通过解决数据共享问题，让并发编程变得更加清晰。
 
+通道是一个通信管道，它用于go协程之间传递数据。换句话说，go协程可以通过通道，传递数据给另外一个go协程。其结果就是，在任何时候，仅有一个go协程可以访问数据。
+
+```go
+c1 := make(chan int)      \\ Zero Channel
+c2 := make(chan int, 10)  \\ 有缓冲通道
+
+go func1(ch chan int){
+	ch <- 10  \\ 阻塞，接受者未准备
+}(c1)
+
+go func2(ch chan int){
+	c2 <- 10  \\ 不阻塞，存进入缓冲区
+}(c2)
+
+<- c1     \\ c1接收准备好了，func1 继续执行
+```
+
+### Panic
+[Golang: 深入理解panic and recover](https://ieevee.com/tech/2017/11/23/go-panic.html)
+Golang里比较常见的错误处理方法是返回error给调用者，但如果是无法恢复的错误，返回error也没有意义，此时可以选择主动触发panic。
+
+除了代码中主动触发的panic，程序运行过程中也会因为出现某些错误而触发panic（例如数组越界、往关闭的channel发送数据等）。
+
+panic会停掉当前正在执行的程序（注意，不只是协程），但是与os.Exit(-1)这种直愣愣的退出不同，panic的撤退比较有秩序，他会以后进先出的方式处理完当前goroutine已经defer挂上去的任务，执行完毕后再退出整个程序。
+
+```go
+func main() {
+	var user = os.Getenv("USER_")
+	go func() {
+		defer func() {
+			fmt.Println("defer here")
+		}()
+		if user == "" {
+			panic("should set user env.")
+		}
+	}()
+	time.Sleep(1 * time.Second)
+	fmt.Printf("get result %d\r\n", result)
+}
+
+\\ ------------------------------------
+\\ 可输出“defer here”，不输出“get result”
+\\ ------------------------------------
+```
 
