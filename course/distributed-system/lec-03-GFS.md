@@ -1,5 +1,7 @@
 # GFS
 
+GFS是由Google设计并实现的一个可扩展的分布式文件系统，它适用于大型分布式计算密集型应用程序。
+
 ## Introduction
 1. Component failures are the norm rather than the exception.
   - GFS 包含上千台机器，机器都是便宜的零部件组装的
