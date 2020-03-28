@@ -1,6 +1,16 @@
 [Shell 命令](#shell)
 
-## 管道
+## Screen 命令
+```
+screen -S yourname  -> 新建一个叫yourname的session
+screen -ls          -> 列出当前所有的session
+screen -r yourname  -> 回到yourname这个session
+ctrl + a + d        -> detach 这个session
+ctrl + option + d       -> 删除这个session
+``` 
+
+## MISC
+#### 管道
 通过管道操作，可以指定一个程序的输出为另一个程序的输入，即将一个程序的标准输出与另一个程序的标准输入相连，这种机制就称为管道。
 
 通常，管道操作的预防格式如下：
@@ -12,31 +22,23 @@
 cat input.txt | python test1.py | python test2.py 
 ```
 
-## screen
-```
-screen -S yourname  -> 新建一个叫yourname的session
-screen -ls          -> 列出当前所有的session
-screen -r yourname  -> 回到yourname这个session
-ctrl + a + d        -> detach 这个session
-ctrl + option + d       -> 删除这个session
-``` 
-## 查看文件夹内文件大小
+#### 查看文件夹内文件大小
 
 ```
 ls -lht
 ```
 
-## 压缩文件
+#### 压缩文件
 ```
 tar -zcvf /home/DIR.tar.gz /DIR
 ```
 
-## 批量删除空文件/按正则文法删除某些文件夹
+#### 批量删除空文件/按正则文法删除某些文件夹
 ```
 find . -name "*" -type f -size 0c | xargs -n 1 rm -f
 ls | grep -P "^A.*[0-9]{2}$" | xargs -d"\n" rm
 ```
-## SCP
+## SCP 命令
 1. 从服务器下载文件
 ```
 scp username@servername:/path/filename /tmp/local_destination
@@ -60,7 +62,7 @@ scp -r username@servername:remote_dir/ /tmp/local_dir
 scp  -r /tmp/local_dir username@servername:remote_dir
 ```
 
-## TMUX
+## TMUX 命令
 [Cheet Sheet](https://gist.github.com/ryerh/14b7c24dfd623ef8edc7)
 ```
 新建会话 tmux [new -s 会话名 -n 窗口名]
@@ -83,36 +85,39 @@ attach一个会话 tmux a -t SESSION-ID
 最大化当前所在面板：Ctrl + b,z，tmux 1.8 新特性  
 ```
 
-## 修改用户密码
+## 新用户相关
+#### 修改用户密码
 ```
 passwd
 ```
 
-## 添加环境变量
-```
-export PATH=/home/yunxuan/MAC/anaconda3/bin:$PATH
-```
-
-## 查看cuda与cudnn版本
-```
-cat /usr/local/cuda/version.txt
-cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2
-```
-## 查看驱动版本
-```
-cat /proc/driver/nvidia/version
-```
-
-## 添加conda-forge源
-```
-conda config --add channels conda-forge 
-```
-
-## 新添加用户无法使用命令行上下键以及tab键
+#### 新添加用户无法使用命令行上下键以及tab键
 ```
 sudo vi /etc/passwd
 ***/bin/sh -> ***/bin/bash
 ```
+
+#### 添加环境变量
+```
+export PATH=/home/yunxuan/MAC/anaconda3/bin:$PATH
+```
+
+## 深度学习环境配置
+#### 查看cuda与cudnn版本
+```
+cat /usr/local/cuda/version.txt
+cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2
+```
+#### 查看驱动版本
+```
+cat /proc/driver/nvidia/version
+```
+
+#### 添加conda-forge源
+```
+conda config --add channels conda-forge 
+```
+
 
 ## <span id = "shell">Shell 脚本</span>
 ### 文件描述符 File Descriptor
