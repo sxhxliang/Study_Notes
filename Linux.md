@@ -1,4 +1,4 @@
-[Shell 命令](#anchor)
+[Shell 命令](#shell)
 
 ## 管道
 通过管道操作，可以指定一个程序的输出为另一个程序的输入，即将一个程序的标准输出与另一个程序的标准输入相连，这种机制就称为管道。
@@ -114,8 +114,7 @@ sudo vi /etc/passwd
 ***/bin/sh -> ***/bin/bash
 ```
 
-<span id = "anchor">锚点</span>
-## Shell 脚本
+<span id = "shell">## Shell 脚本</span>
 ### 井号 (comments) 
 1. 井号一般是注释作用
 
