@@ -183,7 +183,7 @@ find . -name "*.js" -or -name "*.css" -type f   # 省略链接符视为 -and
 ### xargs
 The `xargs` command in UNIX is a command line utility for building an execution pipeline from standard input. Whilst tools like `grep` can accept standard input as a parameter, many other tools cannot. Using `xargs` allows tools like `echo` and `rm` and `mkdir` to accept standard input as arguments. [详解](https://shapeshed.com/unix-xargs/)
 
-```
+```bash
 # 与 mkdir 组合
 echo 'one two three' | xargs mkdir
 ls
