@@ -159,6 +159,35 @@ fi
 - 当有多个嵌套时，只有第一个返回0退出状态的命令会导致符合该条件执行的语句部分被执行,如果所有的语句的执行状态都不为0，则执行else中语句。
 - 返回状态：最后一个命令的退出状态，或者当没有条件是真的话为0。
 
+### find
+查找符合条件的文件 or 目录，[详解](https://math2001.github.io/article/bashs-find-command/)
+
+- 简化版操作 `find PATH [expression]`
+```bash
+# 找相同后缀文件
+find . -name "*.go"
+# 找目录
+find . -type d -name "*local*" 
+```
+
+- 组合expression
+  - 子表达式的操作符包括 `-type f/d`, `-name "REGEX"`, `-path "REGEX"` 等
+  - 子表达式可以通过 `-and`, `-or`, `-not(!)` 进行组合
+  - 每个子表达式只与右边结合，所以 `expr1 or expr2 and expr3` 等效于 `(expr1 or expr2) and expr3`.
+  
+```bash
+find conf/ -type f ! -name "*_local.*"          # ! 视为 -not 的简写
+find . -name "*.js" -or -name "*.css" -type f   # 省略链接符视为 -and
+```
+
+### xargs
+The `xargs` command in UNIX is a command line utility for building an execution pipeline from standard input. Whilst tools like `grep` can accept standard input as a parameter, many other tools cannot. Using `xargs` allows tools like `echo` and `rm` and `mkdir` to accept standard input as arguments. [详解](https://shapeshed.com/unix-xargs/)
+
+```
+# 
+```
+
+
 ### $ 钱号(dollar sign) 
 变量替换(Variable Substitution)的代表符号。 
 ```bash
