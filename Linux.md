@@ -114,7 +114,27 @@ sudo vi /etc/passwd
 ***/bin/sh -> ***/bin/bash
 ```
 
-<span id = "shell">## Shell 脚本</span>
+## <span id = "shell">Shell 脚本</span>
+### 文件描述符 File Descriptor
+- 0 号描述符： stdin, 代表输入设备, 进程从它读入数据;
+- 1 号描述符： stdout, 进程往其中写入数据;
+- 2 号描述符： stderr, 进程会往其中写入错误信息;
+
+#### > 重定向 (Redirecting)
+重定向语法为： [FILEDESCRIPTOR]> ， []内默认为1。
+
+```bash
+# 将cmd的输出转入stderr
+>&2 cmd 
+cmd >&2
+
+# 将 stderr 重定向至文件error.txt
+cat nop.txt 2> error.txt 
+
+# 分别重定向 stderr 和 stdout 
+python test.py 2> err.txt 1> out.txt
+```
+
 ### 井号 (comments) 
 1. 井号一般是注释作用
 
@@ -137,15 +157,20 @@ echo ~+/var/log
 echo ~-/etc/httpd/logs 
 ```
 
+### ; 分号 (Command separator) 
+在 shell 中，担任\"连续指令\"功能的符号就是\"分号\"。譬如以下的例子：
+```bash
+cd ~/backup ; mkdir startup ; cp ~/.* startup/. 
+```
 
-; 分号 (Command separator) 
-在 shell 中，担任\"连续指令\"功能的符号就是\"分号\"。譬如以下的例子：cd ~/backup ; mkdir startup ;cp ~/.* startup/. 
-
-
-;; 连续分号 (Terminator) 
-专用在 case 的选项，担任 Terminator 的角色。 
-case \"$fop\" inhelp) echo \"Usage: Command -help -version filename\";;version) echo \"version 0.1\" ;;esac 
-
+### ;; 连续分号 (Terminator) 
+专用在 case 的选项，担任 Terminator 的角色。
+```bash
+case "$fop" in
+  help) echo "Usage: Command -help -version filename" ;;
+  version) echo "version 0.1" ;;
+esac 
+```
 
 . 逗号 (dot,就是“点”) 
 在 shell 中，使用者应该都清楚，一个 dot 代表当前目录，两个 dot 代表上层目录。 
