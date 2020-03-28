@@ -210,7 +210,7 @@ case "$fop" in
 esac 
 ```
 
-### `command` 倒引号 (backticks) 
+### \`command\` 倒引号 (backticks) 
 在前面的单双引号，括住的是字串，但如果该字串是一列命令列，会怎样？答案是不会执行。要处理这种情况，我们得用倒单引号来做。 
 ```bash
 fdv=`date + %F`
@@ -266,7 +266,7 @@ who | wc -l
 善用这个观念，对精简 script 有相当的帮助。 
 
 
-# ! 惊叹号(negate or reverse) 
+### ! 惊叹号(negate or reverse) 
 - 通常它代表反逻辑的作用，譬如条件侦测中，用 != 来代表\"不等于\" 
 ```bash
 if [ "$?" != 0 ]then
