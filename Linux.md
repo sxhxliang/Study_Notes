@@ -1,6 +1,16 @@
-[Shell 命令](#shell)
+# Linux 命令笔记
 
-## Screen 命令
+## 目录
+- [Screen 命令](#screen)
+- [SCP 命令](#scp)
+- [TMUX 操作](#tmux)
+- [Conda & Cuda](#dl)
+- [Shell 命令](#shell)
+- [新用户配置](#newuser)
+- [MISC](#misc)
+  
+
+## <span id = "screen">Screen 命令</span>
 ```
 screen -S yourname  -> 新建一个叫yourname的session
 screen -ls          -> 列出当前所有的session
@@ -9,36 +19,7 @@ ctrl + a + d        -> detach 这个session
 ctrl + option + d       -> 删除这个session
 ``` 
 
-## MISC
-#### 管道
-通过管道操作，可以指定一个程序的输出为另一个程序的输入，即将一个程序的标准输出与另一个程序的标准输入相连，这种机制就称为管道。
-
-通常，管道操作的预防格式如下：
-
-程序1 | 程序2 | 程序3…… | 程序n
-
-
-```bash
-cat input.txt | python test1.py | python test2.py 
-```
-
-#### 查看文件夹内文件大小
-
-```
-ls -lht
-```
-
-#### 压缩文件
-```
-tar -zcvf /home/DIR.tar.gz /DIR
-```
-
-#### 批量删除空文件/按正则文法删除某些文件夹
-```
-find . -name "*" -type f -size 0c | xargs -n 1 rm -f
-ls | grep -P "^A.*[0-9]{2}$" | xargs -d"\n" rm
-```
-## SCP 命令
+## <span id = "scp">SCP 命令</span>
 1. 从服务器下载文件
 ```
 scp username@servername:/path/filename /tmp/local_destination
@@ -62,7 +43,7 @@ scp -r username@servername:remote_dir/ /tmp/local_dir
 scp  -r /tmp/local_dir username@servername:remote_dir
 ```
 
-## TMUX 命令
+## <span id = "tmux">TMUX 命令</span>
 [Cheet Sheet](https://gist.github.com/ryerh/14b7c24dfd623ef8edc7)
 ```
 新建会话 tmux [new -s 会话名 -n 窗口名]
@@ -85,7 +66,7 @@ attach一个会话 tmux a -t SESSION-ID
 最大化当前所在面板：Ctrl + b,z，tmux 1.8 新特性  
 ```
 
-## 新用户相关
+## <span id="newuser">新用户相关</span>
 #### 修改用户密码
 ```
 passwd
@@ -102,7 +83,7 @@ sudo vi /etc/passwd
 export PATH=/home/yunxuan/MAC/anaconda3/bin:$PATH
 ```
 
-## 深度学习环境配置
+## <span id = "dl">深度学习环境配置</span>
 #### 查看cuda与cudnn版本
 ```
 cat /usr/local/cuda/version.txt
@@ -330,8 +311,45 @@ echo "sus = $sus" # sus = 8
 ```
 
 ### & 后台工作 
-单一个& 符号，且放在完整指令列的最后端，即表示将该指令列放入后台中工作。 可用来并发N个任务
+单一个& 符号，且放在完整指令列的最后端，即表示将该指令列放入后台中工作。 
 ```bash
 tar cvfz data.tar.gz data > /dev/null& 
 ```
+也可用来并发 N 个任务
+```bash
+python master.py
+python worker.py --id=1 &
+python worker.py --id=2 &
+python worker.py --id=3 &
+python worker.py --id=4
+```
 
+## <span id = "misc">MISC</span>
+#### 管道
+通过管道操作，可以指定一个程序的输出为另一个程序的输入，即将一个程序的标准输出与另一个程序的标准输入相连，这种机制就称为管道。
+
+通常，管道操作的预防格式如下：
+
+程序1 | 程序2 | 程序3…… | 程序n
+
+
+```bash
+cat input.txt | python test1.py | python test2.py 
+```
+
+#### 查看文件夹内文件大小
+
+```
+ls -lht
+```
+
+#### 压缩文件
+```
+tar -zcvf /home/DIR.tar.gz /DIR
+```
+
+#### 批量删除空文件/按正则文法删除某些文件夹
+```
+find . -name "*" -type f -size 0c | xargs -n 1 rm -f
+ls | grep -P "^A.*[0-9]{2}$" | xargs -d"\n" rm
+```
