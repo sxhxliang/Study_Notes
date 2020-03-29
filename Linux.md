@@ -373,6 +373,12 @@ python worker.py --id=3 &
 python worker.py --id=4
 ```
 
+### "&&" 
+`&&` is used to chain commands together, such that the next command is run if and only if the preceding command exited without errors (or, more accurately, exits with a return code of 0).
+```bash
+cd output && bash run.sh
+```
+
 ## <span id = "misc">MISC</span>
 #### 管道
 通过管道操作，可以指定一个程序的输出为另一个程序的输入，即将一个程序的标准输出与另一个程序的标准输入相连，这种机制就称为管道。
