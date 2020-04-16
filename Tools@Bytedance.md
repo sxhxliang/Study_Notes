@@ -84,3 +84,18 @@ FROM
 WHERE
     date = "20200229"
 ```
+
+# 设置代理
+```bash
+function pon(){
+  export http_proxy=10.20.47.147:3128 https_proxy=10.20.47.147:3128 no_proxy=code.byted.org
+}
+
+function poff(){
+  unset http_proxy; unset https_proxy
+}
+```
+直接在terminal里输入
+```bash
+export http_proxy=10.20.47.147:3128 https_proxy=10.20.47.147:3128 no_proxy=code.byted.org
+```
