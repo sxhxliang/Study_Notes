@@ -179,3 +179,8 @@ def shellSort(arr):
 - 最坏时间复杂度：`O(n^2)`，间隔序列取得很糟糕；`O(n*(log(n))^2)`，间隔序列取得已知条件下比较好
 - 平均时间复杂度：取决于间隔序列如何取
 - 最坏空间复杂度：总共`O(n)`，辅助`O(n)`
+
+## 2. KMP 算法
+![KMP详解](http://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html)
+
+KMP算法用来匹配字符串S中子串P的出现次数，时间复杂度为`O(N+P)`
