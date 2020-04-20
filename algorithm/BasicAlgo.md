@@ -57,7 +57,31 @@ function partition(arr, left ,right):   // 分区操作
 
 ### 桶排序 bucketsort
 
+- 设置一个定量的数组当作空桶；
+- 遍历输入数据，并且把数据一个一个放到对应的桶里去；
+- 对每个不是空的桶进行排序；
+- 从不是空的桶里把排好序的数据拼接起来。 
 
+![](https://images2017.cnblogs.com/blog/849589/201710/849589-20171015232107090-1920702011.png)
+
+```python
+def bucketsort(arr, bucketsize):
+    minval, maxval = min(arr), max(arr)
+    buckets_num = (maxval - minval) // bucketsize + 1 
+    buckets = [[] for _ in range(buckets_num)]
+    for a in arr:
+        buckets[(a - minval) // bucketsize].append(a)
+    
+    result = []
+    for bucket in buckets:
+        if bucket:
+            result.extend(sorted(bucket))
+    return result
+```
+
+- `O(N)+O(M * (N/M) * log(N/M))=O(N + N * (logN-logM)) = O(N + NlogN - NlogM)`
+- 最优情况下，桶的个数M=N个,每个桶里面有一个数据，这样时间复杂度为O(N)
+- 桶的数目越多，空间越大，时间复杂度越低
 
 
 ### 选择排序 selectsort
@@ -129,4 +153,29 @@ def insertionSort(arr):
 - 和冒泡排序相似，当数组有序时，只需要遍历一次数组，最优复杂度 `O(N)`
 - 最差复杂度和平均复杂度都是 `O(N^2)`
 
+### 希尔排序 Shellsort
 
+![](https://images2015.cnblogs.com/blog/1024555/201611/1024555-20161128110416068-1421707828.png)
+
+希尔排序是把记录按下标的一定增量(GAP)分组，对每组使用直接插入排序算法排序；随着增量逐渐减少，每组包含的关键词越来越多，数组也越来越有序；当增量减至1时，整个文件恰被分成一组，算法便终止。
+
+```python
+def shellSort(arr): 
+    n = len(arr)
+    gap = int(n/2)
+  
+    while gap > 0: 
+        for i in range(gap, n): 
+            temp = arr[i] 
+            j = i 
+            while j >= gap and arr[j-gap] >temp: 
+                arr[j] = arr[j-gap] 
+                j -= gap 
+            arr[j] = temp 
+        gap = gap // 2
+```
+
+- 最优时间复杂度：`O(n*log(n))`
+- 最坏时间复杂度：`O(n^2)`，间隔序列取得很糟糕；`O(n*(log(n))^2)`，间隔序列取得已知条件下比较好
+- 平均时间复杂度：取决于间隔序列如何取
+- 最坏空间复杂度：总共`O(n)`，辅助`O(n)`
