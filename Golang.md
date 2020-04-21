@@ -186,4 +186,4 @@ func main() {
 
 Go进程结束由主线程退出时间决定的，当有多个线程再跑的时候，需要使用WaitGroup等待其他正在执行的线程结束后再退出。
 
-
+### 3. [sync.Cond](https://ieevee.com/tech/2019/06/15/cond.html)
