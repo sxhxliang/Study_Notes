@@ -84,6 +84,32 @@ go func2(ch chan int){
 <- c1     \\ c1接收准备好了，func1 继续执行
 ```
 
+- 对于无缓冲通道，必须在接收端准备好了才能发送，否则会造成死锁。
+
+```
+// Deadlock, All goroutines are asleep 
+ch := make(chan int)
+ch <- 9
+fmt.Println(<-ch) 
+
+// No deadlock
+ch := make(chan int)
+go func(){
+    fmt.Println(<-ch) 
+}()
+ch <- 9
+```
+**遍历channel的方式**
+```
+ch := make(chan int, 10)
+for i := range ch {
+    fmt.Println(i)
+}
+// 这样写也会报错，all goroutines are asleep
+// 原因是只有当ch被关闭之后才能跳出循环
+```
+
+
 ### Panic
 [Golang: 深入理解panic and recover](https://ieevee.com/tech/2017/11/23/go-panic.html)
 Golang里比较常见的错误处理方法是返回error给调用者，但如果是无法恢复的错误，返回error也没有意义，此时可以选择主动触发panic。
