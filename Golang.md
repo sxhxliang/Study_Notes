@@ -138,3 +138,52 @@ func main() {
 \\ ------------------------------------
 ```
 
+## 锁
+
+### 1. sync.Mutex
+
+```go
+var l sync.Mutex
+
+go func(){
+	l.Lock()
+	time.Sleep(1 * time.Second) // do something
+	l.Unlock()
+}()
+
+go func(){
+	l.Lock()	
+	time.Sleep(1 * time.Second) // do something
+	l.Unlock()
+}()
+
+```
+其中一个goroutine先拿到锁，另一个就会阻塞1s，等另一个释放锁之后继续执行。
+
+### 2. sync.WaitGroup
+
+```go
+func dosomething(t int, wg *sync.WaitGroup){
+	time.Sleep(t * time.Millisecond)
+	wg.Done()
+}
+
+func main() {
+    var wg sync.WaitGroup
+    wg.Add(1)
+    go dosomething(200, &wg)
+    wg.Add(1)
+    go dosomething(400, &wg)
+    wg.Add(1)
+    go dosomething(150, &wg)
+    wg.Add(1)
+    go dosomething(600, &wg)
+
+    wg.Wait()
+    fmt.Println("Done")
+}
+```
+
+Go进程结束由主线程退出时间决定的，当有多个线程再跑的时候，需要使用WaitGroup等待其他正在执行的线程结束后再退出。
+
+
