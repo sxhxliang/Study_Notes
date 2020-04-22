@@ -222,12 +222,17 @@ int mkfifo(const char *path,mode_t mode); 
 ```cpp
 #include <sys/shm.h>
 
-// 用
+// shmget 用一个多个进程统一的 key 来申请指定位置的共享内存
 int shmget(key_t key, size_t size, int shmflg);
-void *shmat(int shm_id, const void *shm_addr, int shmflg);
-int shmctl(int shm_id, int cmd, struct shmid_ds *buf);
-int shmdt(const void *shm_addr);
 
+// shmat 是用来允许本进程访问一块共享内存的函数，将这个内存区映射到本进程的虚拟地址空间。
+void *shmat(int shm_id, const void *shm_addr, int shmflg);
+
+// shmctl控制对这块共享内存的使用
+int shmctl(int shm_id, int cmd, struct shmid_ds *buf);
+
+// 当一个进程不再需要共享内存时，需要把它从进程地址空间中脱离。
+int shmdt(const void *shm_addr);
 ```
 
 
