@@ -408,3 +408,36 @@ tar -zcvf /home/DIR.tar.gz /DIR
 find . -name "*" -type f -size 0c | xargs -n 1 rm -f
 ls | grep -P "^A.*[0-9]{2}$" | xargs -d"\n" rm
 ```
+
+#### 查看端口占用 & 协议链接状态
+lsof 列出所有打开的文件信息
+[lsof 详解](https://www.ibm.com/developerworks/cn/aix/library/au-lsof.html)
+
+`lsof -i` 按照 Ipv4/6 地址去进行筛选，过滤出TCP/UDP链接
+[lsof -i详解](https://www.runoob.com/w3cnote/linux-check-port-usage.html)
+
+```bash
+lsof -i       # ls all
+lsof -i:8080  # specific port 
+```
+
+FD文件描述符列：
+- u 表示该文件被打开并处于读取/写入模式，而不是只读 (r) 或只写 (w) 模式。
+- cwd 值表示应用程序的当前工作目录，这是该应用程序启动的目录，除非它本身对这个目录进行更改。
+- txt 类型的文件是程序代码，如应用程序二进制文件本身或共享库。
+
+Type 列：
+- 文件和目录称为 REG 和 DIR（在 Solaris 中，称为 VREG 和 VDIR）
+- 其他可能的取值为 CHR 和 BLK，分别表示字符和块设备
+- 或者 UNIX（UNIX 域套接字）、FIFO（先进先出队列）和 IPv4（网际协议 (IP) 套接字）。
+
+#### 查看开机/启动时间
+
+```
+who
+who -b 
+cat /proc/uptime # 启动时间
+```
+
+
+
