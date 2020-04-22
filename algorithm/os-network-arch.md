@@ -209,3 +209,30 @@ mknod namedpipe
 int mknod(const char *path,mode_t mod,dev_t dev);
 int mkfifo(const char *path,mode_t mode); 
 ```
+
+#### 3.2.3 共享内存
+共享内存是进程间通信中高效方便的方式之一。共享内存允许两个或更多进程访问同一块内存，就如同 malloc() 函数向不同进程返回了指向同一个物理内存区域的指针，两个进程可以对一块共享内存进行读写。
+
+共享内存并未提供进程同步机制，使用共享内存完成进程间通信时，需要借助互斥量或者信号量来完成进程的同步。
+
+**Notice:** 我们经常使用的 `sync.Mutex`，`sync.WaitGroup` 其实是进行线程间通讯的，用来协调多个goroutine对临界区的访问，原因是线程之间可以共享一块地址空间，所以互斥量与信号量的改变可以被各个线程感知。
+
+这里**共享内存 + Mutex**实现的是进程间通讯，共享内存为各个进程提供了一块share的地址空间，从而可以感知到锁的变化。
+
+```cpp
+#include <sys/shm.h>
+
+// 用
+int shmget(key_t key, size_t size, int shmflg);
+void *shmat(int shm_id, const void *shm_addr, int shmflg);
+int shmctl(int shm_id, int cmd, struct shmid_ds *buf);
+int shmdt(const void *shm_addr);
+
+```
+
+
+
+
+
+
+
