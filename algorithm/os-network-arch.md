@@ -100,3 +100,92 @@ UNIX把出现的异常情况或异步事件以传送信号的方式进行，与�
 
 思想: 判断此次请求是否造成死锁若会造成死锁，则拒绝该请求
 
+## 3. 进程间通讯
+Socket，管道、消息队列、信号量、共享内存
+### 3.1 Socket
+
+### 3.2 管道 [link](https://blog.csdn.net/qq_35116371/article/details/71843606)
+
+![](https://img-blog.csdn.net/20170513173717717?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXFfMzUxMTYzNzE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+调用pipe函数时在内核中开辟一块缓冲区(称为管道)用于通信,它有一个读端一个写端,然后通过fds参数传出给用户程序两个文件描述符,filedes[0]指向管道的读端,filedes[1]指向管道的写端(很好记,就像0是标准输入1是标准输出一样)。所以管道在用户程序看起来就像一个打开的文件,通过read(fds[0]);或者write(fds[1]);向这个文件读写数据其实是在读写内核缓冲区。pipe函数调用成功返回0,调用失败返回-1。
+
+```bash
+>>> go env | grep GOROOT
+```
+
+举个例子，这里 go env会启动一个进程， 而grep命令也会产生一个进程，grep的进程会在go env的标准输出中进行检索GOROOT的行的信息然后显示出来，而负责这两个进程间的通信的正是管道。两个进程通过一个管道只能实现单向通信。
+
+很多的人都知道`|`这个符号是一种管道 ，我们就会发现`|`这是一种匿名的管道: 首先它没有创建新的管道文件；再者它通信的进程虽然不是父子进程，但是可以看成是兄弟进程（同是shell创建的子进程）。
+
+#### 3.2.1 **匿名管道** 和 **命名管道**
+
+匿名管道的一些特点是：
+1. 只能进行单向通信；
+2. 管道依赖于文件系统，进程退出，管道随之退出，即生命周期是随进程的；
+3. 常用于父子进程间的通信，这种管道只能用于具有亲缘关系的进程；
+4. 管道是基于流的，是按照数据流的方式读写的；
+5. 同步访问，即管道访问是自带同步机制的。
+
+```golang
+package main
+
+import "fmt"
+import "os/exec"
+import "bufio"
+import "bytes"
+
+func main() {
+        //create cmd
+        cmd_go_env := exec.Command("go", "env")
+        cmd_grep := exec.Command("grep", "GOROOT")
+
+        stdout_env, env_error := cmd_go_env.StdoutPipe()
+        if env_error != nil {
+                fmt.Println("Error happened about standard output pipe ", env_error)
+                return
+        }
+
+        if env_error := cmd_go_env.Start(); env_error != nil {
+                fmt.Println("Error happened in execution ", env_error)
+                return
+        }
+        
+        //get the output of go env
+        stdout_buf_grep := bufio.NewReader(stdout_env)
+
+        //create input pipe for grep command
+        stdin_grep, grep_error := cmd_grep.StdinPipe()
+        if grep_error != nil {
+                fmt.Println("Error happened about standard input pipe ", grep_error)
+                return
+        }
+
+        //connect the two pipes together
+        stdout_buf_grep.WriteTo(stdin_grep)
+
+        //set buffer for reading
+        var buf_result bytes.Buffer
+        cmd_grep.Stdout = &buf_result
+
+        if grep_error := cmd_grep.Start(); grep_error != nil {
+                fmt.Println("Error happened in execution ", grep_error)
+                return
+        }
+
+        err := stdin_grep.Close()
+        if err != nil {
+                fmt.Println("Error happened in closing pipe", err)
+                return
+        }
+
+        //make sure all the infor in the buffer could be read
+        if err := cmd_grep.Wait(); err != nil {
+                fmt.Println("Error happened in Wait process")
+                return
+        }
+        fmt.Println(buf_result.String())
+
+}
+```
+
