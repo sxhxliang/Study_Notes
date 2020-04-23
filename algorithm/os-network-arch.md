@@ -104,6 +104,149 @@ UNIX把出现的异常情况或异步事件以传送信号的方式进行，与�
 Socket，管道、消息队列、信号量、共享内存
 ### 3.1 Socket
 
+[Golang socket 编程实战](https://tonybai.com/2015/11/17/tcp-programming-in-golang/)
+
+下面举一个简单的例子构建基于 unix-socket 的 server-client 模型。
+
+```golang
+// ------- server.go ------- 
+package main
+
+import (
+	"bufio"
+	"log"
+	"net"
+	"os"
+)
+
+func handelConn(conn net.Conn) {
+	defer conn.Close()
+	for {
+		var buf = make([]byte, 10)
+		n, err := conn.Read(buf)
+		if err != nil {
+			log.Println("Read Error: ", err)
+			break
+		}
+		log.Printf("read %d bytes, content is %s\n", n, string(buf[:n]))
+	}
+}
+
+func closeServer(listener net.Listener) {
+	inputReader := bufio.NewReader(os.Stdin)
+	for {
+		input, err := inputReader.ReadString('\n')
+		if err != nil {
+			log.Println("User input err: ", err)
+		}
+		if input == "close" {
+			listener.Close()
+			return
+		}
+	}
+}
+
+func main() {
+	log.Println("start listening")
+	listener, err := net.Listen("unix", ":8889")
+
+	if err != nil {
+		log.Println("listen err:", err)
+		return
+	}
+	go closeServer(listener)
+
+	cnt := 0
+	for {
+		conn, err := listener.Accept()
+		if err != nil {
+			log.Println("accept err: ", err)
+			break
+		}
+		log.Println("accept connection ", cnt)
+
+		go handelConn(conn)
+		cnt += 1
+	}
+}
+```
+
+```golang
+\\ --------- client.go ----------
+package main
+
+import (
+	"log"
+	"net"
+	"strconv"
+	"time"
+)
+
+func main (){
+	log.Println("begin dail")
+	conn, err := net.Dial("unix", ":8889")
+	if err != nil {
+		log.Println("connection err: ", err)
+		return
+	}
+	defer conn.Close()
+
+	for i := 0; i < 10; i++ {
+		message := "message " + strconv.Itoa(i)
+		
+		n, err := conn.Write([]byte(message))
+		if err != nil {
+			log.Println("Write socket err: ", err)
+			continue
+		}
+		
+		log.Printf("Write %d bytes, content is %s\n", n, message)
+		time.Sleep(2 * time.Second)
+	}
+}
+```
+
+这时候我们分别启动 server 和 多个 clients, 链接就构建起来啦！
+
+```bash
+>>> go run server.go
+2020/04/23 13:24:10 start listening
+2020/04/23 13:24:10 accept connection 0
+2020/04/23 13:24:12 read 9 bytes, content is message 0
+2020/04/23 13:24:13 accept connection 1
+2020/04/23 13:24:13 read 9 bytes, content is message 0
+2020/04/23 13:24:14 read 9 bytes, content is message 1
+2020/04/23 13:24:15 read 9 bytes, content is message 1
+2020/04/23 13:24:16 read 9 bytes, content is message 2
+2020/04/23 13:24:17 read 9 bytes, content is message 2
+...
+
+-----------------------------
+>>> go run client.go & go run client.go & go run client.go
+
+2020/04/23 13:24:12 begin dail
+2020/04/23 13:24:12 write 9 bytes, content is message 0
+2020/04/23 13:24:13 begin dail
+2020/04/23 13:24:13 write 9 bytes, content is message 0
+2020/04/23 13:24:14 write 9 bytes, content is message 1
+2020/04/23 13:24:15 write 9 bytes, content is message 1
+2020/04/23 13:24:16 write 9 bytes, content is message 2
+2020/04/23 13:24:17 write 9 bytes, content is message 2
+2020/04/23 13:24:18 write 9 bytes, content is message 3
+...
+```
+
+go socket编程还涉及到以下问题，详细参阅上文链接。
+- listen backlog 满了怎么办？ 
+    - client dail 阻塞，backlog size 最大默认 128
+- 网络延迟较大，Dial 阻塞并超时怎么办？ 
+    - `conn, err := net.DialTimeout("tcp", "104.236.176.96:80", 2*time.Second)`
+- Socket 中无数据，或者比期望读取数据size小怎么办？
+    - 阻塞/读部分数据
+- 读取操作超时？ 
+    - `conn.SetReadDeadline()`
+
+
 ### 3.2 管道 [link](https://blog.csdn.net/qq_35116371/article/details/71843606)
 
 ![](https://img-blog.csdn.net/20170513173717717?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXFfMzUxMTYzNzE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
