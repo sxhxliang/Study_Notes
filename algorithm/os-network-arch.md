@@ -1,6 +1,35 @@
 # 操作系统和网络
+## 0. 计算机网络4/7层协议体系
 
-## 1. TCP-IP 三次握手和四次握手
+### 0.1 理清概念
+#### TCP/IP
+TCP/IP是Transmission Control Protocol/Internet Protocol的简写，译名为传输控制协议/因特网协议，是Internet最基本的协议。TCP/IP是这个协议族的统称，它采用了4层的层级结构，**而不是指TCP + IP两个协议的总和**！！
+
+#### IP
+IP协议包含源主机地址、目标主机地址，还有TCP数据信息。但IP协议没有做任何事情来确认数据包是否按顺序发送或者包是否被破坏，所以IP数据包是不可靠的。
+
+#### TCP
+面向连接的通信协议，通过三次握手建立连接（socket通过TCP/IP连接时就是经过3次握手），通信完成后要关闭连接，它只用于端对端的通讯
+TCP协议通过3次握手建立起一个可靠的连接，通过将数据包进行排序以及检验的方式，可以提供一种可靠的数据流服务
+TCP可以限制数据的发送速度，间接地控制流量
+
+#### UDP
+面向无连接的通讯协议，UDP数据包括原端口号信息以及目标端口号信息，它可以实现广播发送
+由于UDP通讯不需要接收方确认，所以属于不可靠的传输，可能会出现丢包现象
+
+![](https://img-blog.csdn.net/20180807153922338?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0JleW9uZF8yMDE2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+- 4层是指TCP/IP四层模型，主要包括：应用层、运输层、网络层和网络接口层。
+- 7层是指OSI七层协议模型，主要是：应用层、表示层、会话层、传输层、网络层、数据链路层、物理层。
+
+![](https://img-blog.csdn.net/20180807154323965?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0JleW9uZF8yMDE2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+要点：
+1. TCP 属于传输层协议，IP 属于网络层协议
+2. HTTP 属于应用层协议，我们通常请求网络就是使用HTTP，不需要直接使用TCP和IP这两个协议
+
+
+## 1. TCP 三次握手和四次握手
 
 ![](https://pic3.zhimg.com/80/v2-e8aaab48ff996e5cd8a5b39dc450bd6a_1440w.jpg)
 
