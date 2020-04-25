@@ -206,3 +206,94 @@ def f(nums):
 **典型题：**
 - leetcode 99 恢复二叉搜索树：其实就是inorder遍历二叉树节点（类比遍历数组），按上述算法找到逆序的两个元素。
 
+## 二分查找
+
+使用统一的双闭区间实现 `binarySearch`, `lowerbound`, `upperbound`.
+
+```python
+def binarySearch(nums, target):
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = left + (right - left) // 2
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] < target:
+            left = mid + 1
+        elif nums[mid] > target:
+            right = mid - 1
+    return -1
+
+"""
+e.g. lowerbound(num, target=4)
+
+1. 存在
+nums = [1,2,4,4,5]
+          ^ *
+          r l
+2. 不存在
+nums = [6,7,7,8,9]
+      ^ ^
+      r l
+
+nums = [1,1,2,2,3]
+                ^ ^
+                r l
+
+nums = [1,1,2,5,6]
+            ^ ^
+            r l
+"""
+
+def lowerbound(nums, target):
+    left = 0
+    right = len(nums) - 1
+    while left <= right:
+        mid = left + (right - left) // 2
+        print(left, right, mid)
+        if nums[mid] < target:
+            left = mid + 1
+        elif nums[mid] > target:
+            right = mid - 1
+        elif nums[mid] == target:
+            right = mid - 1
+    if left >= len(nums) or nums[left] != target:
+        return -1
+    return left
+
+
+"""
+e.g. upperbound(num, target=4)
+
+1. 存在
+nums = [1,2,4,4,5]
+              ^ ^
+              r l
+2. 不存在
+nums = [6,7,7,8,9]
+      ^ ^
+      r l 
+      
+nums = [1,2,3,5,9]
+            ^ ^
+            r l 
+"""
+
+def upperbound(nums, target):
+    left = 0
+    right = len(nums) - 1
+    while left <= right:
+        mid = left + (right - left) // 2
+        if nums[mid] < target:
+            left = mid + 1
+        elif nums[mid] > target:
+            right = mid - 1
+        elif nums[mid] == target:
+            left = mid + 1
+    if right < 0 or nums[right] != target:
+        return -1
+    return right
+
+```
+
+
+
