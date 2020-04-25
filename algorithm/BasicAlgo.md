@@ -180,7 +180,29 @@ def shellSort(arr):
 - 平均时间复杂度：取决于间隔序列如何取
 - 最坏空间复杂度：总共`O(n)`，辅助`O(n)`
 
-## 2. KMP 算法
+## KMP 算法
 ![KMP详解](http://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html)
 
 KMP算法用来匹配字符串S中子串P的出现次数，时间复杂度为`O(N+P)`
+
+## 查找有序序列被swap的两个数字
+
+Swap 有两种情况：
+- `[1,4,3,2,5]`：间隔调换，逆序对有两组（4，3），（3，2），涉及调换的是 第一组的前一个，第二组的后一个
+- `[1,3,2,4,5]`：相邻调换，逆序对有一组（3，2），第一组的第一个，第一组的第二个
+
+
+```python
+def f(nums):
+    x = y = None
+    for i in range(len(nums)-1):
+        if nums[i] > nums[i+1]:
+            y = nums[i + 1]     # 找到第一/二组第二个
+            if x is None:
+                x = nums[i]     # 找到第一组第一个
+    return x, y
+```
+
+
+
+
