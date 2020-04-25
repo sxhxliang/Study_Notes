@@ -297,5 +297,62 @@ def upperbound(nums, target):
 
 ## 回溯法
 
-回溯法的
+回溯法的套路模版, 本质上就是寻找一个N叉树的所有可行路径
+
+```python
+def backtrack(first=0):
+    if first == len(arr):
+        result.append(path[:])  # 拷贝并存储一个可行解
+    
+    for i in range(first, len(arr)):  # 从start本身开始，遍历剩余可行路径
+        if valid(arr[i]):
+            path.append(i)  # 扩增路径
+            mark_visited(i) # 标记已经访问
+            backtrack(first + 1)
+            path.pop(-1)
+            unmark_visited(i)
+
+result = []
+path = []
+backtrack(0)
+return result
+
+```
+
+### 1. N皇后问题 [Leetcode 51](https://leetcode.com/problems/n-queens/)
+```python
+# 核心代码
+def backtrack(first=0):
+    if first == n:
+        result.append(path[:])
+    for i in range(n):
+        if col_valid[i] and uphill_valid[first+i] and downhill_valid[first-i]:
+            path.append(i)
+            col_valid[i] = uphill_valid[first+i] = downhill_valid[first-i] = False
+            backtrack(first + 1)
+            path.pop(-1)
+            col_valid[i] = uphill_valid[first+i] = downhill_valid[first-i] = True
+```
+
+### 2. 数独问题 [Leetcode 37](https://leetcode.com/problems/sudoku-solver/submissions/)
+```python
+# 核心代码
+def backtrack(first):
+    if first == len(queue):
+        return True
+    x, y, block = queue[first]
+            
+    for i in range(1, 10):
+        i = str(i)
+        if not row_used[x][i] and not col_used[y][i] and not block_used[block][i]:
+            path.append(i)
+            row_used[x][i] = col_used[y][i] = block_used[block][i] = True
+            
+            if backtrack(first + 1):  # 仅需找到一个可行解
+                return True
+                
+            path.pop(-1)
+            row_used[x][i] = col_used[y][i] = block_used[block][i] = False
+     return False
+```
 
