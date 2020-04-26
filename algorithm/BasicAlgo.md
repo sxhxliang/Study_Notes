@@ -185,6 +185,36 @@ def shellSort(arr):
 
 KMP算法用来匹配字符串S中子串P的出现次数，时间复杂度为`O(N+P)`
 
+```python
+        def constructdp(pattern):
+            dp = [{c:0 for c in chardict} for _ in range(len(pattern) + 1)]
+            X = 0
+            dp[0][pattern[0]] = 1  # i 先走一步，保证领先于影子X
+            for i in range(1, len(pattern)):
+                for ch in chardict:
+                    if ch == pattern[i]:
+                        dp[i][ch] = i + 1
+                    else:
+                        dp[i][ch] = dp[X][ch]
+                    
+                X = dp[X][pattern[i]]
+            return dp
+        
+        def search(seq, dp):
+            j = 0
+            for i, ch in enumerate(seq):
+                if ch in chardict:
+                    j = dp[j][ch]
+                else:
+                    j = 0
+                if j == len(dp) - 1:
+                    return i + 2 - len(dp)
+            return -1
+            
+        dp = constructdp(needle)
+        return search(haystack, dp)
+```
+
 ## 查找有序序列被swap的两个数字
 
 Swap 有两种情况：
