@@ -439,5 +439,8 @@ who -b
 cat /proc/uptime # 启动时间
 ```
 
-
+### 查看内存占用
+```
+free -h
+```
 
