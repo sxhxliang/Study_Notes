@@ -40,16 +40,15 @@ def quickSort(arr, left, right):
     return arr
 }
  
-function partition(arr, left ,right):   // 分区操作
-    pivot = left                  // 设定基准值（pivot）
-    index = pivot + 1
-    for i in range(index, right+1):
-        if arr[i] < arr[pivot]:
-            arr[i], arr[index] = arr[index], arr[i]
-            index += 1
-
-    arr[pivot], arr[index - 1] = arr[index - 1], arr[pivot]
-    return index - 1
+def partition(left, right, arr):
+    pivot_val = arr[right]
+    store_idx = left
+    for i in range(left, right):
+        if arr[i] < pivot_val:
+            arr[i], arr[store_idx] = arr[store_idx], arr[i]
+            store_idx += 1
+    arr[store_idx], arr[right] = arr[right], arr[store_idx]
+    return store_idx
 ```
 
 - 最差情况是数组有序，每次自区间只减少pivot位置的元素，`O(N^2)`
