@@ -254,75 +254,51 @@ def binarySearch(nums, target):
     return -1
 
 """
-e.g. lowerbound(num, target=4)
+e.g. leftbound(num, target=4)
+返回的坐标左侧元素均小于target
+[1,1,3,3,3,4,5] target=2 - return 2
 
-1. 存在
-nums = [1,2,4,4,5]
-          ^ *
-          r l
-2. 不存在
-nums = [6,7,7,8,9]
-      ^ ^
-      r l
+[1,1,3,3,3,4,5] target=3 - return 2
 
-nums = [1,1,2,2,3]
-                ^ ^
-                r l
-
-nums = [1,1,2,5,6]
-            ^ ^
-            r l
 """
 
-def lowerbound(nums, target):
+# 核心思想：左侧都是小于target的元素，相等时缩小右侧区间边界
+def leftbound(nums, target):
     left = 0
-    right = len(nums) - 1
-    while left <= right:
+    right = len(nums)
+    while left < right:
         mid = left + (right - left) // 2
         print(left, right, mid)
-        if nums[mid] < target:
-            left = mid + 1
+        if nums[mid] == target:
+            right = mid     # 缩小右侧边界
         elif nums[mid] > target:
-            right = mid - 1
-        elif nums[mid] == target:
-            right = mid - 1
-    if left >= len(nums) or nums[left] != target:
-        return -1
+            right = mid
+        elif nums[mid] < target:
+            left = mid + 1  # 左侧均小于target
     return left
 
-
 """
+
 e.g. upperbound(num, target=4)
 
-1. 存在
-nums = [1,2,4,4,5]
-              ^ ^
-              r l
-2. 不存在
-nums = [6,7,7,8,9]
-      ^ ^
-      r l 
-      
-nums = [1,2,3,5,9]
-            ^ ^
-            r l 
-"""
+返回的坐标位置元素小于等于target
+[1,1,3,3,3,4,5] target=3 - return 4
 
-def upperbound(nums, target):
+[1,1,3,3,3,4,5] target=4 - return 4
+"""
+# 核心思想，右侧均是大于target元素，相等缩小左侧边界，可能越界
+def rightbound(nums, target):
     left = 0
-    right = len(nums) - 1
-    while left <= right:
+    right = len(nums)
+    while left < right:
         mid = left + (right - left) // 2
-        if nums[mid] < target:
+        if nums[mid] == target:
+            left = mid + 1      # 缩小左侧边界
+        elif nums[mid] < target:
             left = mid + 1
         elif nums[mid] > target:
-            right = mid - 1
-        elif nums[mid] == target:
-            left = mid + 1
-    if right < 0 or nums[right] != target:
-        return -1
-    return right
-
+            right = mid
+    return left - 1     # 可能越界            
 ```
 
 ## 回溯法
