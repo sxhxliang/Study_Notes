@@ -441,6 +441,21 @@ cat /proc/uptime # 启动时间
 
 ### 查看内存占用
 ```
-free -h
+>>> free -h
+
+              total        used        free      shared  buff/cache   available
+Mem:            15G        9.3G        1.6G        158M        4.5G        5.6G
+Swap:            0B          0B          0B
+```
+
+### 查看磁盘空间占用
+```
+>>> df -lh
+
+Filesystem     Size   Used  Avail Capacity iused               ifree %iused  Mounted on
+/dev/disk1s1  233Gi   79Gi  151Gi    35% 1557305 9223372036853218502    0%   /
+/dev/disk1s4  233Gi  3.0Gi  151Gi     2%       3 9223372036854775804    0%   /private/var/vm
+/dev/disk2s1  1.1Gi  1.1Gi   12Mi   100%   10505          4294956774    0%   /Volumes/CLion
+/dev/disk1s3  233Gi  487Mi  151Gi     1%      34 9223372036854775773    0%   /Volumes/Recovery
 ```
 
