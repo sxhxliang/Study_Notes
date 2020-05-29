@@ -63,6 +63,17 @@ Interface Definition Languages are designed to allow programmers to define inter
 cat sample_doc.txt | python mapper.py | sort k1,1 | python reducer.py
 ```
 
+## 踩坑 MR 运行目录结构
+以前我们通过-file以及-cacheArchive参数上传的文件都会被放到节点的同一目录下，因此通过python互相之间import是没有问题的。
+
+当前使用的系统其实是将-file以及-cacheArchive参数上传的文件和压缩包放在不同的目录下，之后通过软链链接到同一个container目录下。
+
+这样就导致一个问题，主要执行的mapper或者reducer脚本没办法import其他的脚本。
+
+解决办法是将压缩包放到一个runtime_lib目录下面打包，在python脚本中加一行sys.path.append("./runtime_lib/")就可以索引到压缩包里面的库文件了。
+
+解决-file的方法是将本地文件全部放到一个runtime目录下面，之后通过-file runtime将整个目录上传上去，执行的时候通过python runtime/mapper.py这种方式就可以了，保证所有python文件在同一个目录下面。
+
 [深入了解SQL Join机制](https://www.jianshu.com/p/9e1d3793cba6)
 
 ## 3. HDFS
