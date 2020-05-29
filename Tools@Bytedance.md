@@ -58,6 +58,11 @@ Interface Definition Languages are designed to allow programmers to define inter
 -cacheArchive /app/ecom/cm/nova.ufs/u-wangyou/java6.tar.gz#java6 # hdfs上要分发的压缩包，解压后的文件夹名为java6
 ```
 
+本地通过管道测试 MR程序正确性
+```
+cat sample_doc.txt | python mapper.py | sort k1,1 | python reducer.py
+```
+
 [深入了解SQL Join机制](https://www.jianshu.com/p/9e1d3793cba6)
 
 ## 3. HDFS
