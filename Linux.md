@@ -459,3 +459,8 @@ Filesystem     Size   Used  Avail Capacity iused               ifree %iused  Mou
 /dev/disk1s3  233Gi  487Mi  151Gi     1%      34 9223372036854775773    0%   /Volumes/Recovery
 ```
 
+### 杀死一个进程
+```
+kill -s 9 $PID
+```
+
