@@ -1,3 +1,16 @@
+## import
+- 同一文件目录下直接使用 
+```
+import a
+```
+
+- 不同文件目录下（哪怕是同一目录的软连接），需要将模块所在文件夹加入系统路径
+```
+import sys
+sys.path.append(‘a.py所在的路径’)
+import a
+```
+
 ## 命令行参数
 usage: python [option] ... [-c cmd | -m mod | file | -] [arg] ...
 Options and arguments (and corresponding environment variables):  
