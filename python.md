@@ -1,15 +1,33 @@
 ## import
+
+```
+ROOT/
+   |
+   |--- dir_A/
+   |     |
+   |     |--- mod/
+   |     |--- test_a.py
+   |
+   |--- dir_B/
+         |
+         |--- test_b.py
+
+```
 - 同一文件目录下直接使用 
 ```
-import a
+# test_a.py
+import mod
 ```
 
-- 不同文件目录下（哪怕是同一目录的软连接），需要将模块所在文件夹加入系统路径
+- 不同文件目录下（哪怕是同一目录的软连接），需要将模块所在一级目录加入系统路径
 ```
+# test_b.py
 import sys
-sys.path.append(‘a.py所在的路径’)
-import a
+sys.path.append("/ROOT/dir_A")
+import mod
 ```
+
+这里注意，append的必须是一级路径，python将会根据模块名称寻找对应module
 
 ## 命令行参数
 usage: python [option] ... [-c cmd | -m mod | file | -] [arg] ...
