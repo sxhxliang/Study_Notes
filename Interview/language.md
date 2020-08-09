@@ -1,6 +1,33 @@
 # 找工编程语言问题
 
 ## C++
+### 指针与引用
+```cpp
+void func1(int *ptr){
+    int a = 100;
+    ptr = &a;
+    return;
+}
+
+void func2(int &obj){
+    int a = 100;
+    obj = a;
+    return;
+}
+
+int main(){
+    int a = 10;
+    func1(a);
+    cout << a << endl;  // 输出为10
+    
+    func2(a);
+    cout << a << endl;  // 输出为100
+}
+```
+
+- 指针作为函数参数，实际上是新建了一个指针对象，并对地址进行了拷贝
+- 引用作为函数参数，传递的
+
 ### 1. Struct 的对齐机制
 **原则A**：struct或者union的成员，第一个成员在偏移0的位置，之后的每个成员的起始位置必须是当前成员大小的整数倍
 
