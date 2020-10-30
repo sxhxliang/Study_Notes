@@ -71,7 +71,7 @@ TCP/IP参考模型是一个抽象的分层模型，这个模型一共分为四�
 - TCP、UDP在传输层。
 
 ## TCP/IP 协议族
-TCP/IP 是基于 TCP 和 IP 这两个最初的协议之上的不同的通信协议的大集合，而不是某一个特定的协议。
+TCP/IP协议是一个协议簇，而不是某一个特定的协议。UDP只是其中的一个， 之所以命名为TCP/IP协议，因为TCP、IP协议是两个很重要的协议，就用他两命名了。
 
 - TCP - 传输控制协议
     - TCP 用于从应用程序到网络的数据传输控制。
@@ -91,8 +91,76 @@ TCP/IP 是基于 TCP 和 IP 这两个最初的协议之上的不同的通信协�
     - IMAP 用于存储和取回电子邮件。
 - POP - 邮局协议（Post Office Protocol）
     - POP 用于从电子邮件服务器向个人电脑下载电子邮件。
+- UDP、FTP、DNS、SSH、Telnet...
 
 ## 参考资料
 1. [详解公网Ip和私网ip、ABC类IP地址](https://blog.csdn.net/gui951753/article/details/79210535)
 2. [详解NAT网络地址转换](https://blog.csdn.net/freeking101/article/details/77962312)
 3. [为什么需要内网穿透以及内网穿透的定义和应用](http://www.weather.com.cn/sstnews/2019/12/3270925.shtml)
+
+### TCP 和 UDP
+用户数据报协议（英語：User Datagram Protocol，縮寫：UDP）是一个简单的面向数据报的通信协议。
+
+传输控制协议（英語：Transmission Control Protocol，縮寫：TCP）是一种面向连接的、可靠的、基于字节流的传输层通信协议。
+
+在 C++ socket 编程中：
+- `SOCK_STREAM` 基于TCP协议, 是有保障的(即能保证数据正确传送到对方)面向连接的socket，多用于资料(如文件)传送。
+- `SOCK_DGRAM` 基于UDP协议, 是无保障的面向消息的socket，主要用于在网络上发广播信息。
+
+### 内核 send/recv 缓冲区
+
+- 接收缓冲区被TCP和UDP用来缓存网络上来的数据，一直保存到应用进程读走为止。
+- 发送缓冲区仅TCP有，用来将待发送报文数据缓存入内核；UDP没有发送缓冲区。
+
+#### 查看缓冲区大小
+
+能发出多少TCP包以及每个包承载多少数据，除了受到自身服务器配置和环境带宽影响，对端的接收状态也能影响你的发送状况。
+
+查看测试机的socket发送缓冲区大小
+```bash
+[jiang@localhost ~]$ uname -a
+Linux localhost.localdomain 2.6.32-642.el6.x86_64 #1 SMP Tue May 10 17:27:01 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
+[jiang@localhost ~]$ cat /proc/sys/net/core/rmem_max
+124928
+[jiang@localhost ~]$ cat /proc/sys/net/core/wmem_max
+124928
+[jiang@localhost ~]$ cat /proc/sys/net/core/rmem_default
+124928
+[jiang@localhost ~]$ cat /proc/sys/net/core/wmem_default
+124928
+```
+- rmem_max：一个Socket的读缓冲区可由程序设置的最大值，单位字节；
+- wmem_max：一个Socket的写缓冲区可由程序设置的最大值，单位字节；
+- rmem_default：一个Socket的被创建出来时，默认的读缓冲区大小，单位字节；
+- wmem_default：一个Socket的被创建出来时，默认的写缓冲区大小，单位字节；
+
+proc文件系统下的值和sysctl中的值都是全局值，应用程序可根据需要在程序中使用setsockopt（）对某个socket的发送缓冲区尺寸进行单独修改。
+
+通过合理的设置“TCP.SO_RCVBUF & TCP.SO_SNDBUF”来提高系统的吞吐量以及快速检测tcp链路的连通性； 这两个选项就是来设置TCP连接的两个buffer尺寸的。
+
+#### TCP 缓冲区
+TCP.SO_RCVBUF & TCP. SO_SNDBUF
+
+每个TCP socket在内核中都有一个发送缓冲区和一个接收缓冲区，TCP的全双工的工作模式以及TCP的流量(拥塞)控制便是依赖于这两个独立的buffer以及buffer的填充状态。
+
+#### TCP recv buffer
+
+接收缓冲区把数据缓存入内核，应用进程一直没有调用recv()进行读取的话，此数据会一直缓存在相应socket的接收缓冲区内。不管进程是否调用recv()读取socket，对端发来的数据都会经由内核接收并且缓存到socket的内核接收缓冲区之中。
+
+`recv()`，就是把内核缓冲区中的数据拷贝到应用层用户的buffer里面，并返回；
+
+#### TCP send buffer
+
+进程调用send()发送的数据的时候，最简单情况（也是一般情况），将数据拷贝进入socket的内核发送缓冲区之中，然后send便会在上层返回。换句话说，send（）返回之时，数据不一定会发送到对端去（和write写文件有点类似）。
+
+`send()`，仅仅是把应用层buffer的数据拷贝进socket的内核发送buffer中，发送是TCP的事情，和send其实没有太大关系。
+
+#### TCP 缓冲区流量控制
+
+对于TCP，如果应用进程一直没有读取，接收缓冲区满了之后，发生的动作是：**接收端通知发发端，接收窗口关闭（win=0）**。这个便是滑动窗口的实现。保证TCP套接口接收缓冲区不会溢出，从而保证了TCP是可靠传输。因为对方**不允许发出超过所通告窗口大小的数据**。这就是TCP的流量控制，如果对方无视窗口大小而发出了超过窗口大小的数据，则接收方TCP将丢弃它。
+
+#### UDP recv buffer
+
+每个 UDP socket 都有一个接收缓冲区，没有发送缓冲区，从概念上来说就是只要有数据就发，不管对方是否可以正确接收，所以不缓冲，不需要发送缓冲区。
+
+当 UDP socket 接收缓冲区满时，新来的数据报无法进入接收缓冲区，此数据报就**被丢弃**。UDP是没有流量控制的；快的发送者可以很容易地就淹没慢的接收者，导致接收方的UDP丢弃数据报。
