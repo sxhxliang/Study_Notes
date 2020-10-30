@@ -1,5 +1,22 @@
 # Networking
+- [Networking](#networking)
+- [Case Study](#case-study)
+  * [NAT](#nat)
+  * [NAT穿透](#nat--)
+  * [TCP/IP 四层参考模型](#tcp-ip-------)
+  * [OSI 七层参考模型](#osi-------)
+  * [TCP/IP 协议族](#tcp-ip----)
+  * [参考资料](#----)
+    + [TCP 和 UDP](#tcp---udp)
+    + [内核 send/recv 缓冲区](#---send-recv----)
+      - [查看缓冲区大小](#-------)
+      - [TCP 缓冲区](#tcp----)
+      - [TCP recv buffer](#tcp-recv-buffer)
+      - [TCP send buffer](#tcp-send-buffer)
+      - [TCP 缓冲区流量控制](#tcp--------)
+      - [UDP recv buffer](#udp-recv-buffer)
 
+## IP 地址
 "IP地址" 就是：Internet Protocol Address。翻译成中文就是：互联网协议地址 或者 网际协议地址。
 
 ![](https://sniffer-site.oss-cn-shenzhen.aliyuncs.com/ipclasses.png)
@@ -28,7 +45,7 @@
 
 实际上我们个人电脑的地址为 **IP地址 = 网络地址+子网地址+主机地址**
 
-# Case Study
+### Case Study
 ![](https://img-blog.csdn.net/20180201101336584?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZ3VpOTUxNzUz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
 假设电信公司给我们这栋楼分配的公网IP为117.158.134.217，为了使一整栋楼的人都能访问互联网，我们会对重新划分局域网。已知B类私有地址范围是：172.16.0.0~172.31.255.255，我们学校采取的就是这种划分方法，所以我的私网ip地址就是172.18.251.129.
@@ -51,7 +68,7 @@
 
 可以看出使用只要私有地址存在于*NAT转换映射表*上就可以分配公网IP，A类地址采用B类子网划分也是可以的。
 
-## NAT穿透
+### NAT穿透
 在互联网信息时代的今天，虽然现在宽带速度都很快，但对于电脑玩家来说，很大的问题是“没有公网 IP”！这使得想要在外访问家里的电脑、NAS、树莓派、摄像头等网络设备或远程控制等，都无法轻松实现。当目标计算机处于局域网内时，外网与该计算机需要连接通信，有时就会出现不支持内网穿透的障碍。
 
 - 障碍一：位于局域网内的主机有两套 IP 地址，一套是局域网内的 IP 地址，通常是动态分配的，仅供局域网内的主机间通信使用；一套是经过网关转换后的外网 IP 地址，用于与外网程序进行通信。
@@ -59,12 +76,13 @@
 
 解决办法：要想解决以上两大障碍，借助一台具有公网 IP 的服务器进行桥接即可。
 
-## TCP/IP 四层参考模型
+## 网络模型
+### TCP/IP 四层参考模型
 ![](../figures/TCPIP.png)
 
 TCP/IP参考模型是一个抽象的分层模型，这个模型一共分为四层，所有的TCP/IP系列网络协议都被归类到4个抽象的“层”中。每一抽象层创建在低一层提供的服务上，并且为高一层提供服务。 完成一些特定的任务需要众多的协议协同工作，这些协议分布在参考模型的不同层中的，因此有时称它们为一个协议栈。
 
-## OSI 七层参考模型
+### OSI 七层参考模型
 ![](../figures/OSI.png)
 - 比较重要的HTTP、FTP、SSH在应用层
 - RPC、SOCKS在会话层；
@@ -93,12 +111,8 @@ TCP/IP协议是一个协议簇，而不是某一个特定的协议。UDP只是�
     - POP 用于从电子邮件服务器向个人电脑下载电子邮件。
 - UDP、FTP、DNS、SSH、Telnet...
 
-## 参考资料
-1. [详解公网Ip和私网ip、ABC类IP地址](https://blog.csdn.net/gui951753/article/details/79210535)
-2. [详解NAT网络地址转换](https://blog.csdn.net/freeking101/article/details/77962312)
-3. [为什么需要内网穿透以及内网穿透的定义和应用](http://www.weather.com.cn/sstnews/2019/12/3270925.shtml)
 
-### TCP 和 UDP
+## 对比 TCP 和 UDP 
 用户数据报协议（英語：User Datagram Protocol，縮寫：UDP）是一个简单的面向数据报的通信协议。
 
 传输控制协议（英語：Transmission Control Protocol，縮寫：TCP）是一种面向连接的、可靠的、基于字节流的传输层通信协议。
@@ -112,11 +126,10 @@ TCP/IP协议是一个协议簇，而不是某一个特定的协议。UDP只是�
 - 接收缓冲区被TCP和UDP用来缓存网络上来的数据，一直保存到应用进程读走为止。
 - 发送缓冲区仅TCP有，用来将待发送报文数据缓存入内核；UDP没有发送缓冲区。
 
-#### 查看缓冲区大小
-
 能发出多少TCP包以及每个包承载多少数据，除了受到自身服务器配置和环境带宽影响，对端的接收状态也能影响你的发送状况。
 
-查看测试机的socket发送缓冲区大小
+查看测试机的socket发送缓冲区大小：
+
 ```bash
 [jiang@localhost ~]$ uname -a
 Linux localhost.localdomain 2.6.32-642.el6.x86_64 #1 SMP Tue May 10 17:27:01 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
@@ -138,7 +151,7 @@ proc文件系统下的值和sysctl中的值都是全局值，应用程序可根�
 
 通过合理的设置“TCP.SO_RCVBUF & TCP.SO_SNDBUF”来提高系统的吞吐量以及快速检测tcp链路的连通性； 这两个选项就是来设置TCP连接的两个buffer尺寸的。
 
-#### TCP 缓冲区
+### TCP 缓冲区
 TCP.SO_RCVBUF & TCP. SO_SNDBUF
 
 每个TCP socket在内核中都有一个发送缓冲区和一个接收缓冲区，TCP的全双工的工作模式以及TCP的流量(拥塞)控制便是依赖于这两个独立的buffer以及buffer的填充状态。
@@ -158,9 +171,14 @@ TCP.SO_RCVBUF & TCP. SO_SNDBUF
 #### TCP 缓冲区流量控制
 
 对于TCP，如果应用进程一直没有读取，接收缓冲区满了之后，发生的动作是：**接收端通知发发端，接收窗口关闭（win=0）**。这个便是滑动窗口的实现。保证TCP套接口接收缓冲区不会溢出，从而保证了TCP是可靠传输。因为对方**不允许发出超过所通告窗口大小的数据**。这就是TCP的流量控制，如果对方无视窗口大小而发出了超过窗口大小的数据，则接收方TCP将丢弃它。
-
+###
 #### UDP recv buffer
 
 每个 UDP socket 都有一个接收缓冲区，没有发送缓冲区，从概念上来说就是只要有数据就发，不管对方是否可以正确接收，所以不缓冲，不需要发送缓冲区。
 
 当 UDP socket 接收缓冲区满时，新来的数据报无法进入接收缓冲区，此数据报就**被丢弃**。UDP是没有流量控制的；快的发送者可以很容易地就淹没慢的接收者，导致接收方的UDP丢弃数据报。
+
+## 参考资料
+1. [详解公网Ip和私网ip、ABC类IP地址](https://blog.csdn.net/gui951753/article/details/79210535)
+2. [详解NAT网络地址转换](https://blog.csdn.net/freeking101/article/details/77962312)
+3. [为什么需要内网穿透以及内网穿透的定义和应用](http://www.weather.com.cn/sstnews/2019/12/3270925.shtml)
