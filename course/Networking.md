@@ -1,20 +1,21 @@
 # Networking
 - [Networking](#networking)
-- [Case Study](#case-study)
+  * [IP 地址](#ip---)
+    + [Case Study](#case-study)
   * [NAT](#nat)
-  * [NAT穿透](#nat--)
-  * [TCP/IP 四层参考模型](#tcp-ip-------)
-  * [OSI 七层参考模型](#osi-------)
+    + [NAT穿透](#nat--)
+  * [网络模型](#----)
+    + [TCP/IP 四层参考模型](#tcp-ip-------)
+    + [OSI 七层参考模型](#osi-------)
   * [TCP/IP 协议族](#tcp-ip----)
-  * [参考资料](#----)
-    + [TCP 和 UDP](#tcp---udp)
+  * [对比 TCP 和 UDP](#---tcp---udp)
     + [内核 send/recv 缓冲区](#---send-recv----)
-      - [查看缓冲区大小](#-------)
-      - [TCP 缓冲区](#tcp----)
+    + [TCP 缓冲区](#tcp----)
       - [TCP recv buffer](#tcp-recv-buffer)
       - [TCP send buffer](#tcp-send-buffer)
       - [TCP 缓冲区流量控制](#tcp--------)
-      - [UDP recv buffer](#udp-recv-buffer)
+    + [UDP recv buffer](#udp-recv-buffer)
+  * [参考资料](#----)
 
 ## IP 地址
 "IP地址" 就是：Internet Protocol Address。翻译成中文就是：互联网协议地址 或者 网际协议地址。
@@ -171,7 +172,8 @@ TCP.SO_RCVBUF & TCP. SO_SNDBUF
 #### TCP 缓冲区流量控制
 
 对于TCP，如果应用进程一直没有读取，接收缓冲区满了之后，发生的动作是：**接收端通知发发端，接收窗口关闭（win=0）**。这个便是滑动窗口的实现。保证TCP套接口接收缓冲区不会溢出，从而保证了TCP是可靠传输。因为对方**不允许发出超过所通告窗口大小的数据**。这就是TCP的流量控制，如果对方无视窗口大小而发出了超过窗口大小的数据，则接收方TCP将丢弃它。
-###
+
+### UDP 缓冲区
 #### UDP recv buffer
 
 每个 UDP socket 都有一个接收缓冲区，没有发送缓冲区，从概念上来说就是只要有数据就发，不管对方是否可以正确接收，所以不缓冲，不需要发送缓冲区。
