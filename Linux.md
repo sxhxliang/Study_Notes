@@ -8,7 +8,7 @@
 - [Shell 命令](#shell)
 - [新用户配置](#newuser)
 - [MISC](#misc)
-  
+- [vi](#vi)  
 
 ## <span id = "screen">Screen 命令</span>
 ```
@@ -42,6 +42,14 @@ scp -r username@servername:remote_dir/ /tmp/local_dir
 ```
 scp  -r /tmp/local_dir username@servername:remote_dir
 ```
+
+## <span id = "vi">vi 操作</span>
+- 转到行尾： `$`
+- 转到文件尾：`G`
+- 转到单词尾：`e`
+- 转到单词头：`b`
+- 向下翻页：`ctrl-b`
+- 向上翻页：`ctrl-f`
 
 ## <span id = "tmux">TMUX 命令</span>
 [Cheet Sheet](https://gist.github.com/ryerh/14b7c24dfd623ef8edc7)
