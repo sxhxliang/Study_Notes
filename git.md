@@ -33,6 +33,74 @@ git push -u origin --all
 git push -u origin --tags
 ```
 
+## 拉取与上传分支
+```
+git pull origin onboard_sim_real_car
+git push origin onboard_sim_real_car:onboard_sim_real_car
+```
+
+## Rebase代码并提交PR
+```
+git fetch origin devel
+git rebase -i origin/devel
+```
+
+## 有冲突的代码需要手动解决，解决后add
+```
+git add $FILES_WITHOUT_CONFLICT
+```
+
+## rebase 会对每一个commit都进行冲突检查，可能要进行多次rebase
+```
+git rebase --continue
+>> Successfully rebased and updated refs/heads/modify_simtracer_scenario_handler.
+```
+
+## 本地分支状态已与远端分支不同，强制push
+```
+git push -f origin modify_simtracer_scenario_handler:modify_simtracer_scenario_handler
+```
+
+## 压缩中间的若干组commit
+```
+# A1-A2-A3-B1-B2-B3-C1-C2
+git rebase -i HEAD~8
+
+# 会出现       修改后
+pick A1       pick A1
+pick A2       s A2
+pick A3       s A3
+pick B1       pick B1
+pick B2       s B2
+pick B3       s B3
+pick C1       pick C1
+pick C2       s C2
+```
+
+## Cherry-pick 某些 commit 到当前分支
+```
+# 找到需要pick的commit hashcode
+git checkout $MY_BRANCH
+# pick 一个commit
+git cherry-pick 451d94dc2c0
+# pick 一串commit，保证A发生于B之前
+git cherry-pick $A..$B    # 若包含A：$A^..$B
+```
+
+## 缓存某些修改
+```
+git stash save {MESSAGE}
+# do somthing...
+git list
+git stash pop stash@{0}
+```
+
+## 撤销某些无用文件的修改
+```
+git checkout .
+```
+
+
 ## 基础教程
 
 [动态教程](https://learngitbranching.js.org/?locale=zh_CN)
