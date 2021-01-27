@@ -1,0 +1,66 @@
+# 入职技术分享
+
+## 自然语言处理：
+- 前言
+- 文本序列建模
+    - 模型演进：
+        - 统计模型：
+            - Bag-of-words
+                - TF-IDF + NMF/Topic Model
+                - 未考虑词语顺序
+            - N-Grams
+                - 指数爆炸，无法处理长序列
+                - 数据稀疏性
+        - 神经模型：
+            - RNN（1986）-> LSTM（1997 Schmidhuber）
+            - Attention（2014 Bahdanau）
+            - Transformer（2018）
+    - 预训练语言模型：
+        - 为什么要使用预训练？
+            - 历史：18年10月之前，改模型结构，刷榜陷入停滞
+            - 标注数据量有限：成本高、限制模型规模增长
+            - 通用的文本表征：语料中蕴含大量共享的隐含语义关系，这些关系对所有自然语言理解任务有意义
+            - 增强域迁移能力：避免冷启动
+        - Word2Vec（词级别）
+        - Elmo
+        - GPT系列
+        - BERT
+            - NLP 深度学习范式的改变
+                - Deep NLP
+                - Pretrain + Finetune
+            - XLNet
+            - RoBerta
+    - 小总结
+    - BERT不适用的情况？
+        - 超长文本、用户特征：StarSpace
+        - 生物DNA序列：*MutSpace
+    - BERT实践：
+        - *QA任务：DFGN
+        - GLUE 基准测试
+
+    
+- 知识图谱
+    - KG概念
+        - 领域/通用KG
+    - 知识图谱构建（NLP4KG）
+        - Schema 构建
+        - NER
+            - HMM + Viterbi
+            - LSTM + CRF + Viterbi
+            - BERT
+        - Relation Extraction
+            - 传统NN
+            - 远程监督：MTB
+            - *融入知识：KERE
+        - KBP
+    - 知识图谱应用（KG4NLP）
+        - Entity Linking
+            - candidate generation
+            - entity disambiguation
+        - *Entity Tagging
+            - Keyphrase Extraction
+            - Entity Linking
+            - Filtering
+        - Entity Embedding
+        - KG for 推荐
+        - KBQA

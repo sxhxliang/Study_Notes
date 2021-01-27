@@ -9,6 +9,11 @@
 - [新用户配置](#newuser)
 - [MISC](#misc)
 - [vi](#vi)  
+- find
+- xarg
+- netstat
+- lsof
+- tar
 
 ## <span id = "screen">Screen 命令</span>
 ```
@@ -127,7 +132,7 @@ Shell 中对文件描述符的操作由三部分组成: **(Left, Operation, Righ
 - 当 Right 为文件名时, Operation 和 Right 可以有空格, 否则也不能有空格; (> out.txt)
 
 #### > 重定向 (Redirecting)
-重定向语法为： [FILEDESCRIPTOR]> ， []内默认为1。
+重定向语法为： `[FILEDESCRIPTOR]>` ， []内默认为1。
 
 ```bash
 # 将cmd的输出转入stderr
@@ -333,7 +338,7 @@ who | wc -l
 ### ! 惊叹号(negate or reverse) 
 - 通常它代表反逻辑的作用，譬如条件侦测中，用 != 来代表\"不等于\" 
 ```bash
-if [ "$?" != 0 ]then
+if [ "$?" != 0 ] then
 echo "Executes error"
 exit 1
 fi 
@@ -406,9 +411,10 @@ cat input.txt | python test1.py | python test2.py
 ls -lht
 ```
 
-#### 压缩文件
+#### 压缩解压文件
 ```
-tar -zcvf /home/DIR.tar.gz /DIR
+tar -zcvf FileName.tar.gz DirName
+tar -zxvf FileName.tar.gz
 ```
 
 #### 批量删除空文件/按正则文法删除某些文件夹
@@ -418,15 +424,29 @@ ls | grep -P "^A.*[0-9]{2}$" | xargs -d"\n" rm
 ```
 
 #### 查看端口占用 & 协议链接状态
-lsof 列出所有打开的文件信息
-[lsof 详解](https://www.ibm.com/developerworks/cn/aix/library/au-lsof.html)
+`netstat`命令各个参数说明如下：
+```bash
+-t : 指明显示TCP端口
+-u : 指明显示UDP端口
+-l : 仅显示监听套接字(所谓套接字就是使应用程序能够读写与收发通讯协议(protocol)与资料的程序)
+-p : 显示进程标识符和程序名称，每一个套接字/端口都属于一个程序。
+-n : 不进行DNS轮询，显示IP(可以加速操作)
+```
 
-`lsof -i` 按照 Ipv4/6 地址去进行筛选，过滤出TCP/UDP链接
-[lsof -i详解](https://www.runoob.com/w3cnote/linux-check-port-usage.html)
+`lsof`命令各个参数说明如下：
+- [lsof 详解](https://www.ibm.com/developerworks/cn/aix/library/au-lsof.html)
+- [lsof -i详解](https://www.runoob.com/w3cnote/linux-check-port-usage.html)
 
 ```bash
-lsof -i       # ls all
-lsof -i:8080  # specific port 
+lsof -i                 ls all
+lsof -i:8080            查看8080端口占用
+lsof abc.txt            显示开启文件abc.txt的进程
+lsof -c abc             显示abc进程现在打开的文件
+lsof -c -p 1234         列出进程号为1234的进程所打开的文件
+lsof -g gid             显示归属gid的进程情况
+lsof +d /usr/local/     显示目录下被进程开启的文件
+lsof +D /usr/local/     同上，但是会搜索目录下的目录，时间较长
+lsof -d 4               显示使用fd为4的进程
 ```
 
 FD文件描述符列：
@@ -441,7 +461,7 @@ Type 列：
 
 #### 查看开机/启动时间
 
-```
+```bash
 who
 who -b 
 cat /proc/uptime # 启动时间
@@ -471,4 +491,5 @@ Filesystem     Size   Used  Avail Capacity iused               ifree %iused  Mou
 ```
 kill -s 9 $PID
 ```
+
 
