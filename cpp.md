@@ -7,7 +7,7 @@ extern "C" {
 #include "dubins.h"
 }
 ```
-尽管 C 是 C++ 的功能子集，但由于 C++ 的 命名重整（Name Mangling） 机制导致 C 函数的 undefined reference。
+尽管 C 是 C++ 的功能子集，但由于 C++ 的 命名重整（Name Mangling） 机制导致 C 函数的 undefined reference，因此需要通过`extern "C"` 告知编译器跳过C函数的命名重整。
 
 - C语言不支持函数重载，而C++支持重载.
 - 通过C++编译器(g++) 编译的代码会在原函数基础上加上后缀以修饰函数参数: `f() -> ?f@@YAXHD@Z()`，不同的编译器修饰方式不同
