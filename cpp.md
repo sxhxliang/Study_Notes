@@ -1,5 +1,21 @@
 # C++
 
+## C++ 代码引入 C 代码
+
+```cpp
+extern "C" {
+#include "dubins.h"
+}
+```
+尽管 C 是 C++ 的功能子集，但由于 C++ 的 命名重整（Name Mangling） 机制导致 C 函数的 undefined reference。
+
+- C语言不支持函数重载，而C++支持重载.
+- 通过C++编译器(g++) 编译的代码会在原函数基础上加上后缀以修饰函数参数: `f() -> ?f@@YAXHD@Z()`，不同的编译器修饰方式不同
+- 而通过C编译器gcc编译的代码则只添加下划线: `fun() -> _fun()`
+
+
+
+
 ## 智能指针
 ### 1. std::shared_ptr
 ![](https://www.google.com/url?sa=i&url=http%3A%2F%2Fzhaoyan.website%2Fxinzhi%2Fcpp%2Fhtml%2Fcppsu43.html&psig=AOvVaw1VpPukzttPqgph7AeLsAGi&ust=1612509471923000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCOjdtIXYz-4CFQAAAAAdAAAAABAO)
@@ -60,6 +76,8 @@ shared_ptr<string> ps1 (new string("ps1"));
 fun(string* pstr); 
 fun(shared_ptr<string> & ref_ptr);
 ```
+
+shared_ptr basic 5: 尽量不要使用 shared_ptr 作为类的成员，要明确所有权使用 unique_ptr 或裸指针。
 
 #### When are control block created?
 - std::make_shared always creates a control block. It manufactures a new object to point to, so there is certainly no control block for that object at the time std::make_shared is called.
