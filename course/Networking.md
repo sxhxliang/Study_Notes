@@ -180,6 +180,33 @@ TCP.SO_RCVBUF & TCP. SO_SNDBUF
 
 当 UDP socket 接收缓冲区满时，新来的数据报无法进入接收缓冲区，此数据报就**被丢弃**。UDP是没有流量控制的；快的发送者可以很容易地就淹没慢的接收者，导致接收方的UDP丢弃数据报。
 
+
+## 网络性能
+### Bandwidth and Latency
+
+评估网络的性能通常有两个重要指标：带宽（bandwidth/throughput）和延迟（latency/delay）。
+
+**带宽**是指在单位时间内可通过网络传输的bit数。比如一个网络有 10 million bits/second (10Mbps) 带宽，意味着其每秒可传输10M比特，也就是每 0.1μs 传输一个比特。
+
+**延迟**是指信息从网络一端传输到另一段所需要的时间。比如一个跨洲的网络有24ms的延迟，意味着一条消息从东海岸到西海岸需要24ms才能抵达；更多的时候我们关注一条信息从网络两端往返的时间，也就是RTT（Round Trip Time），而不是单向传播的延迟。
+
+![](https://book.systemsapproach.org/_images/f01-16-9780123850591.png)
+
+通过网络传输的比特可以认为具有一定宽度: (a) bits transmitted at 1 Mbps (each bit is 1 microsecond wide); (b) bits transmitted at 2 Mbps (each bit is 0.5 microseconds wide).
+
+### 网络延迟
+
+```
+Latency = Propagation + Transmit + Queue
+Propagation =  Distance/SpeedOfLight
+Transmit = DataSize/Bandwidth
+```
+
+网络延迟主要由三个部分组成：
+- Propagation：信号传播的速度，其在不同的介质中速度不同，但都接近光速(3.0 × 10^8 m/s in a vacuum, 2.3 × 10^8 m/s in a copper cable, and 2.0 × 10^8 m/s in an optical fiber.)
+- Transmit：取决于数据包大小以及网络带宽
+- Queue：交换机在转发数据包前缓存、排队等待的时间
+
 ## 参考资料
 1. [详解公网Ip和私网ip、ABC类IP地址](https://blog.csdn.net/gui951753/article/details/79210535)
 2. [详解NAT网络地址转换](https://blog.csdn.net/freeking101/article/details/77962312)
